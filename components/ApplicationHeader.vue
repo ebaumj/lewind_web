@@ -11,15 +11,15 @@
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4 text-rose_very_light">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <NuxtLink to="/" class="hover:text-rose_red rounded-md px-3 py-2 text-sm font-medium">Home</NuxtLink>
-                <NuxtLink to="/stationsMap" class="hover:text-rose_red rounded-md px-3 py-2 text-sm font-medium">Stations Map</NuxtLink>
-                <NuxtLink to="/about" class="hover:text-rose_red rounded-md px-3 py-2 text-sm font-medium">About</NuxtLink>
+                <NuxtLink to="/" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 mb-0 pb-0 text-sm">home</i>Home</NuxtLink>
+                <NuxtLink to="/stationsMap" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">map</i>Stations Map</NuxtLink>
+                <NuxtLink to="/about" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">info</i>About</NuxtLink>
               </div>
             </div>
           </div>
           <div class="-mr-2 flex md:hidden">
             <!-- Mobile menu button -->
-            <button @click="toggleMobileMenu" type="button" class="inline-flex items-center justify-center rounded-md bg-rose_dark p-2 text-rose_light hover:bg-rose_semi_dark hover:text-rose_red focus:outline-none focus:ring-2 focus:ring-rose_semi_dark focus:ring-offset-2 focus:ring-offset-gray-800" aria-controls="mobile-menu" aria-expanded="false">
+            <button @click="toggleMobileMenu" type="button" class="inline-flex items-center justify-center rounded-md bg-rose_dark p-2 text-rose_light hover:bg-rose_semi_dark hover:text-rose_red focus:outline-none " aria-controls="mobile-menu" aria-expanded="false">
               <span class="sr-only">Open main menu</span>
               <!-- Menu open: "hidden", Menu closed: "block" -->
               <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
@@ -38,18 +38,19 @@
       <div v-show="mobileMenuActive" class="md:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3 text-rose_very_light">
           <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <NuxtLink to="/" class="hover:text-rose_red block rounded-md px-3 py-2 text-sm font-medium">Home</NuxtLink>
-          <NuxtLink to="/stationsMap" class="hover:text-rose_red block rounded-md px-3 py-2 text-sm font-medium">Stations Map</NuxtLink>
-          <NuxtLink to="/about" class="block hover:text-rose_red rounded-md px-3 py-2 text-sm font-medium">About</NuxtLink>
+          <NuxtLink to="/" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">home</i>Home</NuxtLink>
+          <NuxtLink to="/stationsMap" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">map</i>Stations Map</NuxtLink>
+          <NuxtLink to="/about" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">info</i>About</NuxtLink>
         </div>
       </div>
     </nav>
 </template>
 
 <script setup>
-import { ref } from 'vue'
 const mobileMenuActive = ref({ type: Boolean, default: false })
 mobileMenuActive.value = false
+const { $setPageTranition } = useNuxtApp()
+$setPageTranition(() => { mobileMenuActive.value = false })
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value
 }
@@ -57,7 +58,7 @@ const toggleMobileMenu = () => {
 
 <style scoped>
 .router-link-exact-active {
-    /*color: #C80000; /* rose_red */
+    color: #C80000; /* rose_red */
     background-color: #2d4053; /* rose_semi_dark */
 }
 </style>
