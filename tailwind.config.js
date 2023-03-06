@@ -81,6 +81,9 @@ export default {
           "monospace"
         ]
       },
+      backgroundImage : {
+        'rose' : 'url("~/assets/images/compass_outside.png")'
+      }
     }
   }
 }

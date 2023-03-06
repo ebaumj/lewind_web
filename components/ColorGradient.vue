@@ -27,23 +27,23 @@
         <div class="from-wind-48"></div>
         <div class="from-wind-50"></div>
         <div class="from-wind-52"></div>
-        <div v-if="direction == 'to-l'" :class="`bg-gradient-to-l from-wind-${color} w-full h-full`">
+        <div v-if="direction == 'to-l'" :class="`bg-gradient-to-l from-wind-${color} w-full h-full ${addClass}`">
             <slot/>
         </div>
-        <div v-if="direction == 'to-r'" :class="`bg-gradient-to-r from-wind-${color} w-full h-full`">
+        <div v-if="direction == 'to-r'" :class="`bg-gradient-to-r from-wind-${color} w-full h-fulll ${addClass}`">
             <slot/>
         </div>
-        <div v-if="direction == 'to-t'" :class="`bg-gradient-to-t from-wind-${color} w-full h-full`">
+        <div v-if="direction == 'to-t'" :class="`bg-gradient-to-t from-wind-${color} w-full h-fulll ${addClass}`">
             <slot/>
         </div>
-        <div v-if="direction == 'to-b'" :class="`bg-gradient-to-b from-wind-${color} w-full h-full`">
+        <div v-if="direction == 'to-b'" :class="`bg-gradient-to-b from-wind-${color} w-full h-fulll ${addClass}`">
             <slot/>
         </div>
     </div>
 </template>
 
 <script setup>
-const { windspeed, direction } = defineProps(['windspeed', 'direction'])
+const { windspeed, direction, addClass } = defineProps(['windspeed', 'direction', 'addClass'])
 const color = (windspeed > 52 ? 52 : 2 * Math.floor(windspeed / 2))
 </script>
 
