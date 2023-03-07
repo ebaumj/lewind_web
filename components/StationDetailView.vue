@@ -1,59 +1,66 @@
 <template>
-    <div class="min-h-screen py-0 px-0 bg-white rounded-md shadow-md w-full">
-        <div class="px-4 py-8 justify-center flex w-full">
-            <h1 class="text-4xl text-400">{{ windData.name }}</h1>
+    <div class="md:text-4xl text-2xl min-h-screen py-0 px-0 bg-white rounded-md shadow-md w-full">
+        <div class="md:px-4 px-2 py-8 justify-center flex w-full">
+            <h1>{{ windData.name }}</h1>
         </div>
-        <div class="container my-2 mx-auto px-0 md:px-4 grid md:grid-cols-2 sm:grid-cols-1">
-            <div class="mx-16 mb-0 justify-center items-center p-20">
+        <div class="container my-2 mx-auto px-0 md:px-4 grid md:grid-cols-2 grid-cols-1">
+            <div class="md:mx-16 mb-0 justify-center items-center md:p-20 p-8">
                 <div class="square bg-rose bg-contain bg-no-repeat justify-center items-center">
                     <img class="square flex justify-center items-center" src="~/assets/images/compass_inside.png" :style="{transform: `rotate(${windData.vent_direction + 180}deg)`}">
                 </div>
-                <div class="flex justify-center items-center text-4xl mt-10 text-bold">{{ windData.vent_direction_cardinal }} {{ windData.vent_direction }}&deg</div>
+                <div class="flex justify-center items-center mt-10 text-bold">{{ windData.vent_direction_cardinal }} {{ windData.vent_direction }}&deg</div>
             </div> 
-            <div class="w-full flex">
-                <div class="w-full md:px-10 px-4 grid grid-rows-2 items-center">
-                    <div class="grid grid-cols-2 md:gap-10 gap-4 mb-14">
+            <div class="w-full flex items-center">
+                <div class="w-full md:px-6 px-2 grid grid-rows-2 items-center">
+                    <div class="grid grid-cols-2 md:gap-6 gap-2 md:mb-6 mb-4">
                         <div class="shadow-inner rounded-md bg-rose_very_light">
                             <ColorGradient :windspeed="windData.vent_vitesse" direction="to-t" class="overflow-clip" addClass="rounded-md">
-                                <div class="flex justify-center items-center pt-10 mb-1 text-xl">Wind Average</div>
-                                <div class="flex justify-center items-center pb-10 text-4xl">{{ windData.vent_vitesse }} kts</div>
+                                <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Wind Average</div>
+                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.vent_vitesse }} kts</div>
                             </ColorGradient>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
                             <ColorGradient :windspeed="windData.vent_rafale" direction="to-t" class="overflow-clip" addClass="rounded-md">
-                                <div class="flex justify-center items-center pt-10 mb-1 text-xl">Wind Gust</div>
-                                <div class="flex justify-center items-center pb-10 text-4xl">{{ windData.vent_rafale }} kts</div>
+                                <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Wind Gust</div>
+                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.vent_rafale }} kts</div>
                             </ColorGradient>
                         </div>
                     </div>
-                    <div class="grid grid-cols-3 md:gap-6 gap-3">
+                    <div class="grid grid-cols-3 md:gap-6 gap-2">
                         <div class="shadow-inner rounded-md bg-rose_very_light">
-                            <div class="flex justify-center items-center pt-10 mb-1 text-xl">Wind Average</div>
-                            <div class="flex justify-center items-center pb-6 text-4xl">{{ windData.vent_vitesse }} kts</div>
+                            <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Temperature</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.temp }}&degC</div>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
-                            <div class="flex justify-center items-center pt-10 mb-1 text-xl">Wind Gust</div>
-                            <div class="flex justify-center items-center pb-10 text-4xl">{{ windData.vent_rafale }} kts</div>
+                            <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Humidity</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.humidite }}%</div>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
-                            <div class="flex justify-center items-center pt-10 mb-1 text-xl">Wind Gust</div>
-                            <div class="flex justify-center items-center pb-10 text-4xl">{{ windData.vent_rafale }} kts</div>
+                            <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Preassure</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.pression }}hPa</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <h2 class="text-4xl flex justify-center mb-8">Hisytory</h2>
+        <h2 class="flex justify-center mb-8 mt-8 md:text-4xl text-xl">Average Wind and Gusts Hisytory</h2>
         <div class="px-4 pb-4 flex justify-center w-full">
-            <Chart class="flex justify-center sm:w-full md:max-w-6xl" :lines="datasetsChart1" :legend="pointsTime"/>
+            <Chart class="flex justify-center w-full md:max-w-6xl" :lines="datasetsChart1" :legend="pointsTime" :maximum="maximumWind"/>
         </div>
+        <h2 class="flex justify-center md:mt-8 mt-0 my-8 md:text-4xl text-xl">Wind Direction Hisytory</h2>
         <div class="px-4 pb-4 flex justify-center w-full my-8">
-            <Chart class="flex justify-center sm:w-full md:max-w-6xl" :lines="datasetsChart2" :legend="pointsTime"/>
+            <Chart class="flex justify-center w-full md:max-w-6xl" :lines="datasetsChart2" :legend="pointsTime" :maximum="maximumDirection" :valueToText="directionToText"/>
         </div>
+        <div class="mt-8 text-white">..</div>
     </div>
 </template>
 
 <script setup>
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../tailwind.config.js'
+
+const colors = resolveConfig(tailwindConfig).theme.colors
+
 const { id } = defineProps(['id'])
 const windData = (await useFetch("/api/station_details/" + id)).data.value
 const history = (await useFetch("/api/station_history/" + id)).data.value
@@ -64,8 +71,6 @@ const pointsAvg = []
 const pointsGust = []
 const pointsDirection = []
 
-console.log(history)
-
 history.map((element, key) => {
     pointsTime.push(new Date(element[0]).toLocaleString('ch-de', { weekday: 'short' , hour: '2-digit', minute: '2-digit' }))
     pointsAvg.push(element[1])
@@ -73,35 +78,86 @@ history.map((element, key) => {
     pointsDirection.push(element[3])
 });
 
+const maximumWind = Math.max(...pointsGust) * 1.2
+const maximumDirection = 360
+
+const getGradient = (ctx, chartArea, chart) => {
+    let width, height, gradient;
+    const chartWidth = chartArea.right - chartArea.left;
+    const chartHeight = chartArea.bottom - chartArea.top;
+    if (!gradient || width !== chartWidth || height !== chartHeight) {
+        // Create the gradient because this is either the first render
+        // or the size of the chart has changed
+        width = chartWidth;
+        height = chartHeight;
+        gradient = ctx.createLinearGradient(0, chartArea.bottom, 0, chartArea.top)
+        let yMax = 52;
+        if(chart.scales.y.max < 52)
+            yMax = chart.scales.y.max
+        for(let i = 0; i <= 52 && i < chart.scales.y.max; i += 2) {
+            gradient.addColorStop((i / yMax), colors.wind[i])
+        }
+    }
+
+    return gradient;
+}
+
+const colorFunction = (context) => {
+    const chart = context.chart;
+    const {ctx, chartArea} = chart;
+
+    if (!chartArea) {
+        // This case happens on initial chart load
+        return;
+    }
+    return getGradient(ctx, chartArea, chart);
+}
+
+
+
 const datasetsChart1 = [
     {
-      label: 'Average Wind',
-      backgroundColor: '#1C2834',
-      borderColor: '#1C2834',
-      data: pointsAvg,
-      tension: 0.4,
-      pointStyle: false,
+        label: 'Average Wind',
+        borderColor: colorFunction,
+        data: pointsAvg,
+        tension: 0.4,
+        pointStyle: false,
     },
     {
-      label: 'Wind Gusts',
-      backgroundColor: '#C80000',
-      borderColor: '#C80000',
-      data: pointsGust,
-      tension: 0.4,
-      pointStyle: false,
+        label: 'Wind Gusts',
+        borderColor: colorFunction,
+        data: pointsGust,
+        tension: 0.4,
+        pointStyle: false,
     },
-  ]
+]
 
 const datasetsChart2 = [
     {
-      label: 'Wind Direction',
-      backgroundColor: '#1C2834',
-      borderColor: '#1C2834',
-      data: pointsDirection,
-      tension: 0.4,
-      pointStyle: false,
+        label: 'Wind Direction',
+        borderColor: colors.rose_dark,
+        data: pointsDirection,
+        tension: 0.2,
+        pointStyle: false,
     },
-  ]
+]
+
+/*public String getDirectionString() {
+        String[] text = {"N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"};
+        int index = 0;
+        if(direction < 385)
+            index = (int)(((float)direction + 11.25)/22.5);
+        if(index > 15)
+            index = 0;
+        return text[index];
+    }*/
+const directionToText = (value) => {
+    const directionText = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    let index = Math.floor((value + 11.5) / 22.5)
+    if(index > 15)
+        index = 0
+    return directionText[index]
+}
 
 
 

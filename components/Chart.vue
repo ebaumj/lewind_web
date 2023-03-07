@@ -7,6 +7,7 @@
 </template>
 
 <script setup>
+import { attachScopes } from '@rollup/pluginutils';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -29,16 +30,16 @@ ChartJS.register(
   Legend
 )
 
-const { lines, legend } = defineProps(['lines', 'legend'])
+const { lines, legend, maximum, valueToText } = defineProps(['lines', 'legend', 'maximum', 'valueToText' ])
 
 const data = {
   labels: legend,
   datasets: lines
 }
 //https://www.chartjs.org/docs/latest/samples/tooltip/content.html
-const totalDuration = 2000;
-const delayBetweenPoints = totalDuration / legend.length;
-const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+
+const delayBetweenPoints = 2000 / legend.length
+const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y
 const animation = {
   x: {
     type: 'number',
@@ -47,10 +48,10 @@ const animation = {
     from: NaN, // the point is initially skipped
     delay(ctx) {
       if (ctx.type !== 'data' || ctx.xStarted) {
-        return 0;
+        return 0
       }
-      ctx.xStarted = true;
-      return ctx.index * delayBetweenPoints;
+      ctx.xStarted = true
+      return ctx.index * delayBetweenPoints
     }
   },
   y: {
@@ -60,13 +61,28 @@ const animation = {
     from: previousY,
     delay(ctx) {
       if (ctx.type !== 'data' || ctx.yStarted) {
-        return 0;
+        return 0
       }
       ctx.yStarted = true;
-      return ctx.index * delayBetweenPoints;
+      return ctx.index * delayBetweenPoints
     }
   }
-};
+}
+
+let tooltipFunction, axisFunction
+if(valueToText) {
+  tooltipFunction = (tooltipItems) => {
+    return valueToText(tooltipItems.parsed.y)
+  }
+  axisFunction = (value, index, ticks) => {
+    return valueToText(value)
+  }
+}
+else
+  axisFunction = (value, index, ticks) => {
+    return Math.round(value)
+  }
+
 const options = {
     responsive: true,
     plugins: {
@@ -74,24 +90,39 @@ const options = {
             display: false,
             text: 'Chart.js Line Chart'
         },
+        legend: false,
+        tooltip: {
+          callbacks: {
+            label: tooltipFunction
+          }
+        }
+        
     },
     animation,
     maintainAspectRatio: true,
     scales: {
         x: {
             ticks: {
-                // For a category axis, the val is the index so the lookup via getLabelForValue is needed
-                callback: function(val, index) {
-                    // Hide every 2nd tick label
-                    return index % 4 === 0 ? this.getLabelForValue(val) : '';
-                },
+                maxTicksLimit: 12,
+            },
+            grid: {
+              display: true,
+              drawTicks: false
             }
         },
         y: {
-            
+            min: 0,
+            max: maximum,
+            ticks: {
+              callback: axisFunction,
+              stepSize: maximum / 4
+            }
         }
-
-    }
+    },
+    interaction: {
+        intersect: false,
+        mode: 'index',
+    },
 }
 </script>
 
