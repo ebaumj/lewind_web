@@ -8,10 +8,15 @@
     "postinstall": "nuxt prepare"
   },
   "devDependencies": {
+    "@fawmi/vue-google-maps": "0.9.67",
     "@nuxtjs/tailwindcss": "^6.4.1",
     "chart.js": "^4.2.1",
+    "marker-clusterer-plus": "^2.1.4",
     "nuxt": "^3.2.3",
     "sass": "^1.58.3",
     "vue-chartjs": "^5.2.0"
+  },
+  "dependencies": {
+    "@googlemaps/markerclusterer": "^2.0.15"
   }
 }

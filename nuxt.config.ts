@@ -1,6 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-    modules: [ '@nuxtjs/tailwindcss' ],
+    build: { transpile: ['@fawmi/vue-google-maps'] },
+    modules: [ 
+        ['@nuxtjs/tailwindcss', {  }], 
+    ],
     app: {
         head: {
             title: "Le Wind",
@@ -13,7 +16,7 @@ export default defineNuxtConfig({
         },
     },
     runtimeConfig: {
-        currencyKey: process.env.MAPS_API_KEY
+        public: { GOOGLE_MAPS_API_KEY: process.env.MAPS_API_KEY }
     },
     tailwindcss: {
         cssPath: '~/assets/css/main.css',

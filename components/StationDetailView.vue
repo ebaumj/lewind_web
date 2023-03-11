@@ -142,15 +142,6 @@ const datasetsChart2 = [
     },
 ]
 
-/*public String getDirectionString() {
-        String[] text = {"N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"};
-        int index = 0;
-        if(direction < 385)
-            index = (int)(((float)direction + 11.25)/22.5);
-        if(index > 15)
-            index = 0;
-        return text[index];
-    }*/
 const directionToText = (value) => {
     const directionText = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     let index = Math.floor((value + 11.5) / 22.5)
@@ -158,8 +149,6 @@ const directionToText = (value) => {
         index = 0
     return directionText[index]
 }
-
-
 
 </script>
 
