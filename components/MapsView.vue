@@ -7,6 +7,7 @@
                         <Transition name="station-preview" mode="out-in">
                             <StationPreview v-if="preview" :name="stationPreview.name" :windspeed="stationPreview.vent_vitesse" :direction="stationPreview.vent_direction" @add-station="addStation(station.id)" />
                         </Transition>
+                        <span v-if="!preview">loading...</span>
                     </GMapInfoWindow>
                 </GMapMarker>
             </GMapCluster>
