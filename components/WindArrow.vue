@@ -1,6 +1,6 @@
 <template>
     <div>
-        <img :style="{transform: `rotate(${rotation + 270}deg)`}" src="~/assets/images/left_arrow_icon_free_svg_file.png" class="h-10 w-10">
+        <img :style="{transform: `rotate(${parseInt(rotation) + 270}deg)`}" src="~/assets/images/left_arrow_icon_free_svg_file.png" class="h-10 w-10">
     </div>
 </template>
 

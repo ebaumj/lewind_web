@@ -11,16 +11,20 @@
     "@fawmi/vue-google-maps": "0.9.67",
     "@nuxtjs/tailwindcss": "^6.4.1",
     "chart.js": "^4.2.1",
+    "nodemailer": "^6.9.1",
     "nuxt": "^3.2.3",
     "sass": "^1.58.3",
+    "validator": "^13.9.0",
     "vue-chartjs": "^5.2.0"
   },
   "dependencies": {
     "@fawmi/vue-google-maps": "0.9.67",
     "@nuxtjs/tailwindcss": "^6.4.1",
     "chart.js": "^4.2.1",
+    "nodemailer": "^6.9.1",
     "nuxt": "^3.2.3",
     "sass": "^1.58.3",
+    "validator": "^13.9.0",
     "vue-chartjs": "^5.2.0"
   }
 }

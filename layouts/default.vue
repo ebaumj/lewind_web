@@ -1,6 +1,10 @@
 <template>
     <div class="min-h-screen bg-rose_very_light flex-col">
       <header class="shadow-sm bg-white">
+        <Head>
+              <Meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+              <Meta name="HandheldFriendly" content="true" />
+        </Head>
         <ApplicationHeader />
       </header>
       <!-- page content in slot -->
@@ -12,6 +16,6 @@
 
 </script>
 
-<style scoped>
+<style>
 
 </style>

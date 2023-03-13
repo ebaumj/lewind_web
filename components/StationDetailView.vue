@@ -6,7 +6,7 @@
         <div class="container my-2 mx-auto px-0 md:px-4 grid md:grid-cols-2 grid-cols-1">
             <div class="md:mx-16 mb-0 justify-center items-center md:p-20 p-8">
                 <div class="square bg-rose bg-contain bg-no-repeat justify-center items-center">
-                    <img class="square flex justify-center items-center" src="~/assets/images/compass_inside.png" :style="{transform: `rotate(${windData.vent_direction + 180}deg)`}">
+                    <img class="square flex justify-center items-center" src="~/assets/images/compass_inside.png" :style="{transform: `rotate(${parseInt(windData.vent_direction) + 180}deg)`}">
                 </div>
                 <div class="flex justify-center items-center mt-10 text-bold">{{ windData.vent_direction_cardinal }} {{ windData.vent_direction }}&deg</div>
             </div> 
@@ -64,7 +64,6 @@ const colors = resolveConfig(tailwindConfig).theme.colors
 const { id } = defineProps(['id'])
 const windData = (await useFetch("/api/station_details/" + id)).data.value
 const history = (await useFetch("/api/station_history/" + id)).data.value
-//await new Promise((res) => setTimeout(res, 700))
 
 const pointsTime = []
 const pointsAvg = []
@@ -75,7 +74,7 @@ history.map((element, key) => {
     pointsTime.push(new Date(element[0]).toLocaleString('ch-de', { weekday: 'short' , hour: '2-digit', minute: '2-digit' }))
     pointsAvg.push(element[1])
     pointsGust.push(element[2])
-    pointsDirection.push(element[3])
+    pointsDirection.push(parseInt(element[3]))
 });
 
 const maximumWind = Math.max(...pointsGust) * 1.2
