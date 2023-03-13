@@ -7,7 +7,6 @@
 </template>
 
 <script setup>
-import { attachScopes } from '@rollup/pluginutils';
 import {
   Chart as ChartJS,
   CategoryScale,
