@@ -32,6 +32,11 @@ const isInStorage = (id) => {
     return inStorage
 }
 const allStations = (await useFetch("/api/all_stations/")).data.value
+
+if(allStations == null) {
+    throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
+}
+
 const filteredStations = ref([])
 const preview = ref(false)
 filteredStations.value = allStations.filter((station) => !isInStorage(station.id))

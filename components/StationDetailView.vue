@@ -66,7 +66,6 @@ const windData = (await useFetch("/api/station_details/" + id)).data.value
 const history = (await useFetch("/api/station_history/" + id)).data.value
 
 if(windData == null) {
-    console.log("error")
     throw createError({ statusCode: 404, statusMessage: "Wind Station not found!", fatal: true })
 }
 
