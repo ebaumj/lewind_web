@@ -14,6 +14,7 @@
                         </Transition>
                     </div>
                 </div>
+                <div v-if="windStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations!</div>
             </div>
         </div>
     </div>

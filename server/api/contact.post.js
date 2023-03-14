@@ -38,19 +38,18 @@ export default defineEventHandler(async (event, response) => {
         const body = await readBody(event)
         await isValid(body).then(async (data) => {
             await transporter.sendMail({
-                form: `Le Wind <${data.email}>`,
+                from: data.email,
                 to: config.MAIL_CONTACT,
                 subject: data.subject,
                 text: data.message,
                 html: data.message,
+            }).catch((error) => {
+                console.log(error)
             })
             return Promise.resolve()
-        }).catch((errors) => {
-            return Promise.reject(errors)
         })
         return "Success"
     } catch(error) {
-        console.log(error)
         sendError(event, createError({ statusCode: 400, statusMessage: error }))
     }
  })
