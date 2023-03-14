@@ -48,7 +48,7 @@ const stationPreview = ref({
     vent_direction: 0
 })
 
-const center = {lat: 0, lng: 0}
+const center = {lat: 47.01, lng: 6.987}
 if(navigator.geolocation) {
   navigator.geolocation.getCurrentPosition((position) => { 
     center.lat = position.coords.latitude
