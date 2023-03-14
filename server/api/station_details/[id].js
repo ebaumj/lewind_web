@@ -6,6 +6,9 @@ export default defineEventHandler(async (event) => {
 
     const data = await $fetch(uri)
 
-    return data
+    if(!data)
+        sendError(event, createError({ statusCode: 404, statusMessage: "Wind Station not found!" }))
+    else
+        return data
 
 })

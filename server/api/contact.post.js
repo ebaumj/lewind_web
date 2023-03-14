@@ -1,11 +1,15 @@
 import nodemailer from 'nodemailer'
 import validator from 'validator'
-const config = useRuntimeConfig()
+const config = useRuntimeConfig().public
 
+let secureMail = false
+if(config.MAIL_PORT == 465)
+    secureMail = true
 const transporter = nodemailer.createTransport({
 	serivce: config.MAIL_SERVICE,
     host: config.MAIL_HOST,
     port: config.MAIL_PORT,
+    secure: secureMail,
 	auth: {
 		user: config.MAIL_USER,
 		pass: config.MAIL_PASSWORD,
@@ -38,13 +42,15 @@ export default defineEventHandler(async (event, response) => {
         const body = await readBody(event)
         await isValid(body).then(async (data) => {
             await transporter.sendMail({
-                from: data.email,
+                from: `Le Wind <${data.email}>`,
+                sender: data.email,
+                replyTo: data.email,
                 to: config.MAIL_CONTACT,
                 subject: data.subject,
                 text: data.message,
                 html: data.message,
             }).catch((error) => {
-                console.log(error)
+                Promise.reject(error)
             })
             return Promise.resolve()
         })

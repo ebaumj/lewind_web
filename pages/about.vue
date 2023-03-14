@@ -18,11 +18,11 @@
             <label for="message" class="block mb-1 text-sm">Your message</label>
             <textarea v-model="formData.message" name="message" rows="6" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 " placeholder="Leave a comment.." required />
           </div>
-          <span class="text-rose_red text-sm" v-if="error.value">{{ errorMessage }}</span>
           <button type="submit" class="text-lg flex hover:bg-rose_dark_red bg-rose_dark text-white py-2 md:px-4 px-2 border rounded shadow text-lg items-center justify-center"><i class="material-icons mr-2 mb-0 pb-0 text-sm">mail</i>Send Message</button>
         </form>
         <div class="flex justify-center mt-12 text-lg"><a href='https://play.google.com/store/apps/details?id=com.baumannsw.lewind&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="h-16" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></div>
       </div>
+      <BaseModal v-show="modalShow" @close-modal="modalShow = false" :title="modalTitle" :message="modalMessage" />
     </div>
 </template>
 
@@ -33,17 +33,25 @@ const formData = reactive({
   message: ""
 })
 
-const error = ref(false)
-const errorMessage = "Something went wrong! Please try again!"
+const modalShow = ref(false)
+const modalMessage = ref("")
+const modalTitle = ref("")
+
 const submit = async (form) => {
   await $fetch('/api/contact/', {
     method: 'POST',
     body: form
   }).then(() => {
-    error.value = false
-  }).catch((errorMessage) => {
-    error.value = true
-    console.log(errorMessage)
+    formData.email = ""
+    formData.subject = ""
+    formData.message = ""
+    modalMessage.value = "Thank you for your Message!"
+    modalTitle.value = "Success"
+    modalShow.value = true
+  }).catch(() => {
+    modalMessage.value = "Your message couldn't be delivered successfully. Please try again!"
+    modalTitle.value = "Something went wrong..."
+    modalShow.value = true
   })
 }
 </script>
