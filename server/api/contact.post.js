@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer'
 import validator from 'validator'
+
 const config = useRuntimeConfig().public
 
 let secureMail = false

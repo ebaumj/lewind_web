@@ -19,7 +19,6 @@
 <script setup>
 const { station } = defineProps(['station'])
 const { data } = await useFetch("/api/station_details/" + station.id)
-await new Promise((res) => setTimeout(res, 300))
 const windData = data.value
 </script>
 

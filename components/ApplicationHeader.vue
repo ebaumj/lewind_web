@@ -49,8 +49,7 @@
 <script setup>
 const mobileMenuActive = ref({ type: Boolean, default: false })
 mobileMenuActive.value = false
-const { $setPageTranition } = useNuxtApp()
-$setPageTranition(() => { mobileMenuActive.value = false })
+useNuxtApp().$setPageTranition(() => { mobileMenuActive.value = false })
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value
 }

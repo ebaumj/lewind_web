@@ -15,15 +15,16 @@
 </template>
 
 <script setup>
-  const { stationId } = useRoute().params
-  const stationRemoved = ref(null)
-  
-  const removeFromFavorites = () => {
-      const savedStations = JSON.parse(localStorage.getItem('windStations'))
-      const updatedStations = savedStations.filter((station) => station.id != stationId)
-      localStorage.setItem('windStations', JSON.stringify(updatedStations))
-      stationRemoved.value = true
-  }
+
+const savedStationsLocal = useState('savedStationsLocal', () => ref([]))
+const { stationId } = useRoute().params
+const stationRemoved = ref(false)
+
+const removeFromFavorites = () => {
+    savedStationsLocal.value = savedStationsLocal.value.filter((station) => station.id != stationId)
+    localStorage.setItem('windStations', JSON.stringify(savedStationsLocal.value))
+    stationRemoved.value = true
+}
 </script>
   
 <style scoped>

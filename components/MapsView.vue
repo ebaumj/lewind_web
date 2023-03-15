@@ -16,15 +16,11 @@
 </template>
 
 <script setup>
-// Load Stations from memory
-const myStations = ref([])
-if(localStorage.getItem('windStations')) {
-    myStations.value = JSON.parse(localStorage.getItem('windStations'))
-}
-// Load stations from Serve and Filter
+const savedStationsLocal = useState('savedStationsLocal', () => ref([]))
+// Load stations from Server and Filter
 const isInStorage = (id) => {
     var inStorage = false
-    myStations.value.forEach(myStation => {
+    savedStationsLocal.value.forEach(myStation => {
         if(myStation.id === id) {
             inStorage = true
         }
@@ -66,8 +62,8 @@ const markerClick = async (id) => {
 }
 
 const addStation = (id) => {
-    myStations.value.push({id: id, name: stationPreview.name })
-    localStorage.setItem('windStations', JSON.stringify(myStations.value))
+    savedStationsLocal.value.push({id: id, name: stationPreview.name })
+    localStorage.setItem('windStations', JSON.stringify(savedStationsLocal.value))
     markerClick(null)
     filteredStations.value = allStations.filter((station) => !isInStorage(station.id))
 }
