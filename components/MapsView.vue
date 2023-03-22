@@ -7,7 +7,6 @@
                         <Transition name="station-preview" mode="out-in">
                             <StationPreview v-show="station.previewReady" :name="station.name" :windspeed="station.vent_vitesse" :direction="station.vent_direction" @add-station="addStation(station.id, station.name)" />
                         </Transition>
-                        <span v-show="!station.previewReady">loading...</span>
                     </GMapInfoWindow>
                 </GMapMarker>
             </GMapCluster>
@@ -18,7 +17,6 @@
 <script setup>
 const savedStationsLocal = useGetStationsInStorage()
 const { data } = (await useFetch("/api/all_stations/"))
-
 if(data == null) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
 }
@@ -42,8 +40,10 @@ if(navigator.geolocation) {
   });
 }
 
+const openedPreview = ref(null)
 const markerClick = async (id) => {
-    if(id != null) {
+    if(allStations.value.find(station => station.id === id).showMarker) {
+        closePreview(openedPreview.value)
         const station = allStations.value.find(station => station.id === id)
         station.showPreview = true
         station.previewReady = false
@@ -52,18 +52,25 @@ const markerClick = async (id) => {
         station.vent_vitesse = data.value.vent_vitesse
         station.vent_direction = data.value.vent_direction
         station.previewReady = true
+        openedPreview.value = id
     }
 }
 
 const closePreview = (id) => {
-    allStations.value.find(station => station.id === id).showPreview = false
+    if(openedPreview.value !== null)
+        allStations.value.find(station => station.id === id).showPreview = false
+    openedPreview.value = null
+}
+
+const hideMarker = (id) => {
+    allStations.value.find(station => station.id === id).showMarker = false
 }
 
 const addStation = (id, name) => {
     savedStationsLocal.value.push({id: id, name: name })
     useSetStationsInStorage(savedStationsLocal.value)
     closePreview(id)
-    allStations.value.find(station => station.id === id).showMarker = false;
+    setTimeout(()=>hideMarker(id), 50)  // This way, the Info Window closes immediately
 }
 </script>
 
