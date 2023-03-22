@@ -2,12 +2,12 @@
     <div class="md:text-4xl text-2xl py-0 px-0 bg-white rounded-md shadow-md w-full h-full">
         <GMapMap :center="center" :zoom="9" class="overflow-clip h-full rounded-md">
             <GMapCluster :zoomOnClick="true" :maxZoom="9">
-                <GMapMarker v-for="station in filteredStations" @click="markerClick(station.id)" :key="station.id" :position="{ lat: station.latitude, lng: station.longitude }">
-                    <GMapInfoWindow :opened="infoWindowId === station.id" :closeclick="true" @closeclick="markerClick(null)">
+                <GMapMarker v-for="station in allStations" :visible="station.showMarker" @click="markerClick(station.id)" :key="station.id" :position="{ lat: station.latitude, lng: station.longitude }">
+                    <GMapInfoWindow :opened="station.showPreview" :closeclick="true" @closeclick="closePreview(station.id)">
                         <Transition name="station-preview" mode="out-in">
-                            <StationPreview v-if="preview" :name="stationPreview.name" :windspeed="stationPreview.vent_vitesse" :direction="stationPreview.vent_direction" @add-station="addStation(station.id)" />
+                            <StationPreview v-show="station.previewReady" :name="station.name" :windspeed="station.vent_vitesse" :direction="station.vent_direction" @add-station="addStation(station.id, station.name)" />
                         </Transition>
-                        <span v-if="!preview">loading...</span>
+                        <span v-show="!station.previewReady">loading...</span>
                     </GMapInfoWindow>
                 </GMapMarker>
             </GMapCluster>
@@ -16,32 +16,22 @@
 </template>
 
 <script setup>
-const savedStationsLocal = useState('savedStationsLocal', () => ref([]))
-// Load stations from Server and Filter
-const isInStorage = (id) => {
-    var inStorage = false
-    savedStationsLocal.value.forEach(myStation => {
-        if(myStation.id === id) {
-            inStorage = true
-        }
-    })
-    return inStorage
-}
-const allStations = (await useFetch("/api/all_stations/")).data.value
+const savedStationsLocal = useGetStationsInStorage()
+const { data } = (await useFetch("/api/all_stations/"))
 
-if(allStations == null) {
+if(data == null) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
 }
 
-const filteredStations = ref([])
-const preview = ref(false)
-filteredStations.value = allStations.filter((station) => !isInStorage(station.id))
-
-const infoWindowId = ref(null)
-const stationPreview = ref({
-    name: "",
-    vent_vitesse: 0,
-    vent_direction: 0
+const allStations = ref([])
+data.value.forEach((station) => {
+    station.showMarker = true
+    if(savedStationsLocal.value.find(storedStation => storedStation.id === station.id))
+        station.showMarker = false
+    station.previewReady = false
+    station.showPreview = false
+    station.name = ""
+    allStations.value.push(station)
 })
 
 const center = {lat: 47.01, lng: 6.987}
@@ -53,19 +43,27 @@ if(navigator.geolocation) {
 }
 
 const markerClick = async (id) => {
-    preview.value = false
-    infoWindowId.value = id
     if(id != null) {
-        stationPreview.value = (await useFetch("/api/station_details/" + id)).data.value
-        preview.value = true
+        const station = allStations.value.find(station => station.id === id)
+        station.showPreview = true
+        station.previewReady = false
+        const { data } = (await useFetch("/api/station_details/" + id))
+        station.name = data.value.name
+        station.vent_vitesse = data.value.vent_vitesse
+        station.vent_direction = data.value.vent_direction
+        station.previewReady = true
     }
 }
 
-const addStation = (id) => {
-    savedStationsLocal.value.push({id: id, name: stationPreview.name })
-    localStorage.setItem('windStations', JSON.stringify(savedStationsLocal.value))
-    markerClick(null)
-    filteredStations.value = allStations.filter((station) => !isInStorage(station.id))
+const closePreview = (id) => {
+    allStations.value.find(station => station.id === id).showPreview = false
+}
+
+const addStation = (id, name) => {
+    savedStationsLocal.value.push({id: id, name: name })
+    useSetStationsInStorage(savedStationsLocal.value)
+    closePreview(id)
+    allStations.value.find(station => station.id === id).showMarker = false;
 }
 </script>
 

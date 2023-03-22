@@ -21,10 +21,7 @@
 </template>
 
 <script setup>
-const savedStationsLocal = useState('savedStationsLocal', () => ref([]))
-onBeforeMount(() => {
-    savedStationsLocal.value = JSON.parse(localStorage.getItem('windStations'))
-})
+const savedStationsLocal = useGetStationsInStorage()
 </script>
 
 <style scoped>

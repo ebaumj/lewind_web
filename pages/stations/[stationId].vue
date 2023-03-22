@@ -15,14 +15,12 @@
 </template>
 
 <script setup>
-
-const savedStationsLocal = useState('savedStationsLocal', () => ref([]))
+const savedStationsLocal = useGetStationsInStorage()
 const { stationId } = useRoute().params
 const stationRemoved = ref(false)
 
 const removeFromFavorites = () => {
-    savedStationsLocal.value = savedStationsLocal.value.filter((station) => station.id != stationId)
-    localStorage.setItem('windStations', JSON.stringify(savedStationsLocal.value))
+    savedStationsLocal.value = useSetStationsInStorage(savedStationsLocal.value.filter((station) => station.id != stationId))
     stationRemoved.value = true
 }
 </script>
