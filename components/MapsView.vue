@@ -2,7 +2,8 @@
     <div class="md:text-4xl text-2xl py-0 px-0 bg-white rounded-md shadow-md w-full h-full">
         <GMapMap :center="center" :zoom="9" class="overflow-clip h-full rounded-md">
             <GMapCluster :zoomOnClick="true" :maxZoom="9">
-                <GMapMarker v-for="station in allStations" :visible="station.showMarker" @click="markerClick(station.id)" :key="station.id" :position="{ lat: station.latitude, lng: station.longitude }">
+                <GMapMarker v-for="station in allStations" :visible="station.showMarker" @click="markerClick(station.id)" :key="station.id" :position="{ lat: station.latitude, lng: station.longitude }"
+                :icon="{url: markerIcon, scaledSize: {width: 80, height: 43}}">
                     <GMapInfoWindow :opened="station.showPreview" :closeclick="true" @closeclick="closePreview(station.id)">
                         <Transition name="station-preview" mode="out-in">
                             <StationPreview v-show="station.previewReady" :name="station.name" :windspeed="station.vent_vitesse" :direction="station.vent_direction" @add-station="addStation(station.id, station.name)" />
@@ -15,6 +16,8 @@
 </template>
 
 <script setup>
+import markerIcon from '~/assets/images/iconMapS.png'
+
 const savedStationsLocal = useGetStationsInStorage()
 const { data } = (await useFetch("/api/all_stations/"))
 if(data == null) {

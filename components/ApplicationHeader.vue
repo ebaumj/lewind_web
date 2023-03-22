@@ -5,15 +5,15 @@
           <div class="flex items-center">
             <NuxtLink to="/">
               <div class="flex-shrink-0">
-                <img class="h-10 w-10" src="~/assets/images/icon.png" alt="Your Company">
+                <img class="h-14 w-14" src="~/assets/images/icon.png" alt="Your Company">
               </div>
             </NuxtLink>
             <div class="hidden md:block">
               <div class="ml-10 flex items-baseline space-x-4 text-rose_very_light">
                 <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-                <NuxtLink to="/" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 mb-0 pb-0 text-sm">home</i>Home</NuxtLink>
-                <NuxtLink to="/stationsMap" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">map</i>Stations Map</NuxtLink>
-                <NuxtLink to="/about" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">info</i>About</NuxtLink>
+                <NuxtLink to="/" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">home</i>Home</NuxtLink>
+                <NuxtLink to="/stationsMap" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">map</i>Stations Map</NuxtLink>
+                <NuxtLink to="/about" class="hover:text-rose_red rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">info</i>About</NuxtLink>
               </div>
             </div>
           </div>
@@ -38,9 +38,9 @@
       <div v-show="mobileMenuActive" class="md:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pt-2 pb-3 sm:px-3 text-rose_very_light">
           <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
-          <NuxtLink to="/" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">home</i>Home</NuxtLink>
-          <NuxtLink to="/stationsMap" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">map</i>Stations Map</NuxtLink>
-          <NuxtLink to="/about" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium"><i class="material-icons mr-2 text-sm">info</i>About</NuxtLink>
+          <NuxtLink to="/" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">home</i>Home</NuxtLink>
+          <NuxtLink to="/stationsMap" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">map</i>Stations Map</NuxtLink>
+          <NuxtLink to="/about" class="hover:text-rose_red block rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">info</i>About</NuxtLink>
         </div>
       </div>
     </nav>
