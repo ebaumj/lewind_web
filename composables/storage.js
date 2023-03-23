@@ -1,7 +1,7 @@
 export const useGetStationsInStorage = () => {
     const savedStationsLocal = ref([])
     const dataInStorage = JSON.parse(localStorage.getItem('windStations'))
-    if(dataInStorage.length > 0)
+    if(dataInStorage && dataInStorage.length > 0)
         savedStationsLocal.value = dataInStorage
     return savedStationsLocal
 }
