@@ -16,7 +16,7 @@ export default defineNuxtConfig({
         },
     },
     runtimeConfig: {
-        public: { 
+        secrets: { 
             GOOGLE_MAPS_API_KEY: process.env.MAPS_API_KEY,
             MAIL_HOST: process.env.MAIL_HOST,
             MAIL_PORT: process.env.MAIL_PORT,
