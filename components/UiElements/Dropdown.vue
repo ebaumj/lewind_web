@@ -29,7 +29,7 @@
 
             Highlighted: "bg-indigo-600 text-white", Not Highlighted: "text-gray-900"
         -->
-        <li v-for="option in options" class="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9" id="listbox-option-0" role="option">
+        <li v-for="option in options" class="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white" id="listbox-option-0" role="option">
             <div class="flex items-center">
             <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
             <span class="font-normal ml-3 block truncate">{{ option }}</span>
