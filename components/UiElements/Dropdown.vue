@@ -1,9 +1,8 @@
 <template>
-<div>
   <div class="relative mt-2">
-    <button type="button" @click="selected = !selected" class="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 sm:text-sm sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
+    <button type="button" @click="selected = !selected" class="relative w-full max-w-lg cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-sm md:text-lg sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
       <span class="flex items-center">
-        <span class="ml-3 block truncate">Tom Cook</span>
+        <span class="ml-3 block truncate">{{ options[selectedIndex.value] }}</span>
       </span>
       <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
         <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -11,54 +10,44 @@
         </svg>
       </span>
     </button>
-
-    <!--
-      Select popover, show/hide based on select state.
-
-      Entering: ""
-        From: ""
-        To: ""
-      Leaving: "transition ease-in duration-100"
-        From: "opacity-100"
-        To: "opacity-0"
-    -->
     <Transition name="dropdown-items" mode="out-in">
-        <ul v-show="selected" class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 sm:text-sm" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
-        <!--
-            Select option, manage highlight styles based on mouseenter/mouseleave and keyboard navigation.
-
-            Highlighted: "bg-indigo-600 text-white", Not Highlighted: "text-gray-900"
-        -->
-        <li v-for="option in options" class="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-indigo-600 hover:text-white" id="listbox-option-0" role="option">
-            <div class="flex items-center">
-            <!-- Selected: "font-semibold", Not Selected: "font-normal" -->
-            <span class="font-normal ml-3 block truncate">{{ option }}</span>
-            </div>
-
-            <!--
-            Checkmark, only display for selected option.
-
-            Highlighted: "text-white", Not Highlighted: "text-indigo-600"
-            -->
-            <span class="text-indigo-600 absolute inset-y-0 right-0 flex items-center pr-4">
-            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
-            </svg>
-            </span>
-        </li>
-
-        <!-- More items... -->
+        <ul v-show="selected" class="absolute z-10 mt-1 max-h-56 w-full max-w-lg overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 text-sm md:text-lg" tabindex="-1" role="listbox" aria-labelledby="listbox-label" aria-activedescendant="listbox-option-3">
+          <li v-for="(item, index) in options" :key="index" class="text-gray-900 relative cursor-default select-none py-2 pl-3 pr-9 hover:bg-rose_light hover:text-white" id="listbox-option-0" role="option" @click="indexChanged(index)">
+              <div class="flex items-center">
+                <span class="font-normal ml-3 block truncate">{{ item }}</span>
+              </div>
+              <span v-show="index === selectedIndex.value" class="text-rose_red absolute inset-y-0 right-0 flex items-center pr-4">
+                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
+                </svg>
+              </span>
+          </li>
         </ul>
     </Transition>
   </div>
-</div>
 </template>
 
-<script setup>  
+<script setup>
+const { options, selectedIndex } = defineProps(['options', 'selectedIndex'])
 const selected = ref(false)
-const options = ["Last 6 hours", "Last 12 hours", "Last 24 hours", "Last 48 hours"]
+const emit = defineEmits(['childEvent']);
+/*const indexChanged = (newIndex) => {
+  selected.value = false
+  selectedIndex.value = newIndex
+  emit('index-changed', newIndex)
+}*/
+</script>
 
-
+<script>
+export default {
+  methods: {
+    indexChanged: (newIndex) => {
+      this.selected.value = false
+      this.selectedIndex.value = newIndex
+      this.$emit('index-changed', newIndex)
+    }
+  },
+}
 </script>
 
 <style scoped>
