@@ -31,11 +31,11 @@
 const { options, selectedIndex } = defineProps(['options', 'selectedIndex'])
 const selected = ref(false)
 const emit = defineEmits(['childEvent']);
-/*const indexChanged = (newIndex) => {
+const indexChanged = (newIndex) => {
   selected.value = false
   selectedIndex.value = newIndex
   emit('index-changed', newIndex)
-}*/
+}
 </script>
 
 <script>

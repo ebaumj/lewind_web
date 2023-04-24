@@ -43,6 +43,8 @@
                 </div>
             </div>
         </div>
+        <hr class="py-4">
+        <UiElementsDropdown class="px-4 justify-center flex" :options="dropdownHistoryOptions" :selectedIndex="ref(0)" @index-changed="(index) => dropdownHistoryIndexChanged(index)"></UiElementsDropdown>
         <h2 class="flex justify-center mb-8 mt-8 md:text-4xl text-xl">Average Wind and Gusts Hisytory</h2>
         <div class="px-4 pb-4 flex justify-center w-full">
             <Chart class="flex justify-center w-full md:max-w-6xl" :lines="datasetsChart1" :legend="pointsTime" :maximum="maximumWind"/>
@@ -59,6 +61,8 @@
 import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../tailwind.config.js'
 
+const dropdownHistoryOptions = ["Last 6 hours", "Last 12 hours", "Last 24 hours", "Last 48 hours"]
+
 const colors = resolveConfig(tailwindConfig).theme.colors
 
 const { id } = defineProps(['id'])
@@ -73,13 +77,40 @@ const pointsTime = []
 const pointsAvg = []
 const pointsGust = []
 const pointsDirection = []
+const now = new Date()
 
-history.map((element, key) => {
+const dropdownHistoryIndexChanged = (newIndex) => {
+    let date = new Date(now)
+    if(newIndex === 0)
+        date = date.setHours(date.getHours() - 6)
+    if(newIndex === 1)
+        date = date.setHours(date.getHours() - 12)
+    if(newIndex === 2)
+        date = date.setHours(date.getHours() - 24)
+    if(newIndex === 3)
+        date = date.setHours(date.getHours() - 48)
+    pointsTime.length = 0
+    pointsAvg.length = 0
+    pointsGust.length = 0
+    pointsDirection.length = 0
+    history.map((element) => {
+        if(new Date(element[0]) >= date) {
+            pointsTime.push(new Date(element[0]).toLocaleString('ch-de', { weekday: 'short' , hour: '2-digit', minute: '2-digit' }))
+            pointsAvg.push(element[1])
+            pointsGust.push(element[2])
+            pointsDirection.push(parseInt(element[3]))
+        }
+    });
+}
+
+dropdownHistoryIndexChanged(3)
+
+/*history.map((element, key) => {
     pointsTime.push(new Date(element[0]).toLocaleString('ch-de', { weekday: 'short' , hour: '2-digit', minute: '2-digit' }))
     pointsAvg.push(element[1])
     pointsGust.push(element[2])
     pointsDirection.push(parseInt(element[3]))
-});
+});*/
 
 const maximumWind = Math.max(...pointsGust) * 1.2
 const maximumDirection = 360
