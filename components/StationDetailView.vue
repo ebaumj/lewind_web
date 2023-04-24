@@ -44,14 +44,14 @@
             </div>
         </div>
         <hr class="py-4">
-        <UiElementsDropdown class="px-4 justify-center flex" :options="dropdownHistoryOptions" :selectedIndex="ref(0)" @index-changed="(index) => dropdownHistoryIndexChanged(index)"></UiElementsDropdown>
+        <UiElementsDropdown class="px-4 justify-center flex" :options="dropdownHistoryOptions" :startIndex="startIndex" @index-changed="(index) => dropdownHistoryIndexChanged(index)"></UiElementsDropdown>
         <h2 class="flex justify-center mb-8 mt-8 md:text-4xl text-xl">Average Wind and Gusts Hisytory</h2>
         <div class="px-4 pb-4 flex justify-center w-full">
-            <Chart class="flex justify-center w-full md:max-w-6xl" :lines="datasetsChart1" :legend="pointsTime" :maximum="maximumWind"/>
+            <Chart class="flex justify-center w-full md:max-w-6xl" :key="idWind" :lines="datasetsChart1" :legend="pointsTime" :maximum="maximumWind"/>
         </div>
         <h2 class="flex justify-center md:mt-8 mt-0 my-8 md:text-4xl text-xl">Wind Direction Hisytory</h2>
         <div class="px-4 pb-4 flex justify-center w-full my-8">
-            <Chart class="flex justify-center w-full md:max-w-6xl" :lines="datasetsChart2" :legend="pointsTime" :maximum="maximumDirection" :valueToText="directionToText"/>
+            <Chart class="flex justify-center w-full md:max-w-6xl" :key="idDir" :lines="datasetsChart2" :legend="pointsTime" :maximum="maximumDirection" :valueToText="directionToText"/>
         </div>
         <div class="mt-8 text-white">..</div>
     </div>
@@ -62,12 +62,16 @@ import resolveConfig from 'tailwindcss/resolveConfig'
 import tailwindConfig from '../tailwind.config.js'
 
 const dropdownHistoryOptions = ["Last 6 hours", "Last 12 hours", "Last 24 hours", "Last 48 hours"]
+const startIndex = 3
 
 const colors = resolveConfig(tailwindConfig).theme.colors
 
 const { id } = defineProps(['id'])
 const windData = (await useFetch("/api/station_details/" + id)).data.value
 const history = (await useFetch("/api/station_history/" + id)).data.value
+
+const idWind = ref(0)
+const idDir = ref(0)
 
 if(windData == null) {
     throw createError({ statusCode: 404, statusMessage: "Wind Station not found!", fatal: true })
@@ -100,10 +104,12 @@ const dropdownHistoryIndexChanged = (newIndex) => {
             pointsGust.push(element[2])
             pointsDirection.push(parseInt(element[3]))
         }
-    });
+    })
+    idWind.value++
+    idDir.value++
 }
 
-dropdownHistoryIndexChanged(3)
+dropdownHistoryIndexChanged(startIndex)
 
 /*history.map((element, key) => {
     pointsTime.push(new Date(element[0]).toLocaleString('ch-de', { weekday: 'short' , hour: '2-digit', minute: '2-digit' }))

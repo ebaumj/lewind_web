@@ -2,7 +2,7 @@
   <div class="relative mt-2">
     <button type="button" @click="selected = !selected" class="relative w-full max-w-lg cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 text-sm md:text-lg sm:leading-6" aria-haspopup="listbox" aria-expanded="true" aria-labelledby="listbox-label">
       <span class="flex items-center">
-        <span class="ml-3 block truncate">{{ options[selectedIndex.value] }}</span>
+        <span class="ml-3 block truncate">{{ text }}</span>
       </span>
       <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
         <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -16,7 +16,7 @@
               <div class="flex items-center">
                 <span class="font-normal ml-3 block truncate">{{ item }}</span>
               </div>
-              <span v-show="index === selectedIndex.value" class="text-rose_red absolute inset-y-0 right-0 flex items-center pr-4">
+              <span v-show="index === selectedIndex" class="text-rose_red absolute inset-y-0 right-0 flex items-center pr-4">
                 <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
                 </svg>
@@ -28,25 +28,17 @@
 </template>
 
 <script setup>
-const { options, selectedIndex } = defineProps(['options', 'selectedIndex'])
+const { startIndex, options } = defineProps(['startIndex', 'options'])
+const text = ref(null)
+var selectedIndex = startIndex
+text.value = options[selectedIndex]
 const selected = ref(false)
-const emit = defineEmits(['childEvent']);
+const emit = defineEmits(['index-changed']);
 const indexChanged = (newIndex) => {
-  selected.value = false
-  selectedIndex.value = newIndex
   emit('index-changed', newIndex)
-}
-</script>
-
-<script>
-export default {
-  methods: {
-    indexChanged: (newIndex) => {
-      this.selected.value = false
-      this.selectedIndex.value = newIndex
-      this.$emit('index-changed', newIndex)
-    }
-  },
+  selectedIndex = newIndex
+  text.value = options[newIndex]
+  selected.value = false
 }
 </script>
 
