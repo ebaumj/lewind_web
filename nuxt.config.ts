@@ -39,6 +39,9 @@ export default defineNuxtConfig({
             tailwindcss: {}
         }
     },
+    routeRules: {
+        '/home': { redirect: '/' },
+    },
     ssr: false,
     css: [ '~/assets/css/main.css' ],
     /*vite: {
