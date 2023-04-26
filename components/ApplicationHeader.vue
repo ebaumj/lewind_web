@@ -24,18 +24,17 @@
                 <div>
                   <button @click="toggleProfileMenu" type="button" class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span class="sr-only">Open user menu</span>
-                    <img class="h-8 w-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+                    <img class="h-10 w-10 rounded-full" :key="displayUsername" :src="`https://ui-avatars.com/api/?name=${displayUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.8`" alt="">
                   </button>
                 </div>
 
                 <Transition name="profile-menu" mode="out-in">
                   <div v-show="profileMenuActive" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                     <!-- Active: "bg-gray-100", Not Active: "" -->
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</a>
-
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</a>
-
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1" id="user-menu-item-2">Sign out</a>
+                    <NuxtLink to="/profile" v-show="isLoggedIn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</NuxtLink>
+                    <NuxtLink to="/settings" v-show="isLoggedIn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</NuxtLink>
+                    <button v-show="isLoggedIn" @click="logout(); profileMenuActive = false" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
+                    <button v-show="!isLoggedIn" @click="showLoginModal = true; profileMenuActive = false" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-2">Log in</button>
                   </div>
                 </Transition>
               </div>
@@ -69,7 +68,7 @@
         <div class="border-t border-gray-700 pt-4 pb-3 text-rose_very_light">
           <div class="flex items-center px-5">
             <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+              <img class="h-10 w-10 rounded-full" src="https://ui-avatars.com/api/?name=John+Doe&size=256" alt="">
             </div>
             <div class="ml-3">
               <div class="text-base font-medium leading-none text-white">Tom Cook</div>
@@ -92,20 +91,75 @@
         </div>
       </div>
     </nav>
+    <LoginModal v-show="showLoginModal" @close-modal="showLoginModal = false" @login="login" @create-account="createAccount" />
+    <BaseModal v-show="baseModalShow" @close-modal="baseModalShow = false" :title="baseModalTitle" :message="baseModalMessage" />
 </template>
 
 <script setup>
+const isLoggedIn = ref(await useGetUser() !== null)
+const displayUsername = ref("⎘")
+const showLoginModal = ref(false)
+
+const baseModalShow = ref(false)
+const baseModalMessage = ref("")
+const baseModalTitle = ref("")
+
 const mobileMenuActive = ref(false)
 const profileMenuActive = ref(false)
+
 useNuxtApp().$setPageTranition(() => { 
   mobileMenuActive.value = false
   profileMenuActive.value = false
  })
+
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value
 }
 const toggleProfileMenu = () => {
   profileMenuActive.value = !profileMenuActive.value
+}
+
+const login = async (email, password) => {
+  const login = await useLogin(email, password)
+  showLoginModal.value = false
+  if(login.result) {
+    isLoggedIn.value = true
+    const user = await useGetUser()
+    displayUsername.value = user.email.substring(0, 1)
+  }
+  else {
+    baseModalMessage.value = login.response
+    baseModalTitle.value = "Login Failed"
+    baseModalShow.value = true
+  }
+}
+
+const createAccount = async (email, password) => {
+  const createAccount = await useCreateAccount(email, password)
+  showLoginModal.value = false
+  if(createAccount.result) {
+    baseModalMessage.value = "Your Account was successfully created and you can now log in"
+    baseModalTitle.value = "Account Created"
+    baseModalShow.value = true
+  }
+  else {
+    baseModalMessage.value = createAccount.response
+    baseModalTitle.value = "Create Account failed"
+    baseModalShow.value = true
+  }
+}
+
+const logout = async () => {
+  const logout = await useLogout()
+  if(logout.result) {
+    isLoggedIn.value = false
+    displayUsername.value = "⎘"
+  }
+  else {
+    baseModalMessage.value = createAccount.response
+    baseModalTitle.value = "Logout failed"
+    baseModalShow.value = true
+  }
 }
 </script>
 

@@ -11,30 +11,40 @@ export const useGetUser = async () => {
 }
 
 export const useLogin = async (email, password) => {
-    auth.login(email, password).then((response) => {
-        return { result: true, response: response }
+    let retval = { result: false, response: "" }
+    await auth.login(email, password).then((response) => {
+        retval.result = true
+        retval.response = response
     }).catch((error) => {
-        return { result: false, response: error }
+        retval.result = false
+        retval.response = error
     })
+    return retval
 }
 
 export const useCreateAccount = async (email, password) => {
-    auth.signup(email, password).then((response) => {
-        return { result: true, response: response }
+    let retval = { result: false, response: "" }
+    await auth.signup(email, password).then((response) => {
+        retval.result = true
+        retval.response = response
     }).catch((error) => {
-        return { result: false, response: error }
+        retval.result = false
+        retval.response = error
     })
+    return retval
 }
 
 export const useLogout = async () => {
-    if(await useGetUser()) {
-        user.value.logout().then(async (response) => {
-            return { result: true, response: response }
+    const user = await useGetUser()
+    let retval = { result: true, response: "Loged Out already" }
+    if(user) {
+        await user.logout().then(async (response) => {
+            retval.result = true
+            retval.response = response
         }).catch((error) => {
-            return { result: false, response: error }
+            retval.result = false
+            retval.response = error
         })
     }
-    else {
-        return { result: true, response: "Loged Out already" }
-    }
+    return retval
 }
