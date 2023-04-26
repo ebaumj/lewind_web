@@ -11,6 +11,10 @@
     </div>
 </template>
 
+<script setup>
+definePageMeta({ authRequired: false })
+</script>
+
 <style scoped>
 .station-map-enter-active,
 .station-map-leave-active {

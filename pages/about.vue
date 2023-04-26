@@ -27,6 +27,8 @@
 </template>
 
 <script setup>
+definePageMeta({ authRequired: false })
+
 const formData = reactive({
   email: "",
   subject: "",

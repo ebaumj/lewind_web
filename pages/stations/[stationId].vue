@@ -15,6 +15,7 @@
 </template>
 
 <script setup>
+definePageMeta({ authRequired: false })
 const savedStationsLocal = useGetStationsInStorage()
 const { stationId } = useRoute().params
 const stationRemoved = ref(false)
