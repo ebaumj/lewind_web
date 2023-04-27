@@ -130,8 +130,7 @@ const login = async (email, password) => {
     displayUser.value = user.email
   }
   else {
-    baseModalMessage.value = "Please check email and password"
-    console.log(login.response)
+    baseModalMessage.value = login.response.json.error_description
     baseModalTitle.value = "Login Failed"
     baseModalShow.value = true
   }
@@ -146,8 +145,8 @@ const createAccount = async (email, password) => {
     baseModalShow.value = true
   }
   else {
-    baseModalMessage.value = createAccount.response
-    baseModalTitle.value = "Create Account failed"
+    baseModalMessage.value = createAccount.response.json.msg
+    baseModalTitle.value = "Error " + createAccount.response.json.code
     baseModalShow.value = true
   }
 }
@@ -158,7 +157,7 @@ const logout = async () => {
     isLoggedIn.value = false
   }
   else {
-    baseModalMessage.value = createAccount.response
+    baseModalMessage.value = logout.response.json.error_description
     baseModalTitle.value = "Logout failed"
     baseModalShow.value = true
   }
