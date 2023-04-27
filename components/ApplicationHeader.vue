@@ -24,8 +24,8 @@
                 <div>
                   <button @click="toggleProfileMenu" type="button" class="flex max-w-xs items-center rounded-full bg-gray-800 text-sm" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                     <span class="sr-only">Open user menu</span>
-                    <img v-show="isLoggedIn" class="h-10 w-10 rounded-full" :key="displayUsername" :src="`https://ui-avatars.com/api/?name=${avatarUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.5`" alt="">
-                    <img v-show="!isLoggedIn" class="h-10 w-10 rounded-full" :key="displayUsername" :src="`https://ui-avatars.com/api/?name=⎘&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.8`" alt="">
+                    <img v-show="isLoggedIn" class="h-10 w-10 rounded-full" :key="avatarUsername" :src="`https://ui-avatars.com/api/?name=${avatarUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.5`" alt="">
+                    <img v-show="!isLoggedIn" class="h-10 w-10 rounded-full" :key="avatarUsername" :src="`https://ui-avatars.com/api/?name=⎘&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.8`" alt="">
                   </button>
                 </div>
 
@@ -70,7 +70,7 @@
           <div class="border-t border-gray-700 pt-4 pb-3 text-rose_very_light">
             <div class="flex items-center px-5">
               <div class="flex-shrink-0">
-                  <img v-show="isLoggedIn" class="h-10 w-10 rounded-full" :key="displayUsername" :src="`https://ui-avatars.com/api/?name=${avatarUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.5`" alt="">
+                  <img v-show="isLoggedIn" class="h-10 w-10 rounded-full" :key="avatarUsername" :src="`https://ui-avatars.com/api/?name=${avatarUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.5`" alt="">
               </div>
               <div class="ml-3">
                 <div v-show="isLoggedIn" class="text-sm font-medium leading-none">{{ displayUser }}</div>
@@ -91,13 +91,13 @@
 </template>
 
 <script setup>
-const isLoggedIn = ref(await useGetUser() !== null)
+const user = ref(await useGetUser())
+const isLoggedIn = ref(user.value !== null)
 const avatarUsername = ref("")
 const displayUser = ref("")
 const showLoginModal = ref(false)
 
-if(isLoggedIn) {
-  const user = await useGetUser()
+if(isLoggedIn.value) {
   avatarUsername.value = user.email.substring(0, 1)
 }
 
@@ -125,12 +125,13 @@ const login = async (email, password) => {
   showLoginModal.value = false
   if(login.result) {
     isLoggedIn.value = true
-    const user = await useGetUser()
+    user.value = await useGetUser()
     avatarUsername.value = user.email.substring(0, 1)
     displayUser.value = user.email
   }
   else {
-    baseModalMessage.value = login.response
+    baseModalMessage.value = "Please check email and password"
+    console.log(login.response)
     baseModalTitle.value = "Login Failed"
     baseModalShow.value = true
   }

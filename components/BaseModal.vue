@@ -37,6 +37,7 @@
 
 <script setup>
   const { title, message, show } = defineProps(['title', 'message', 'show'])
+  const emit = defineEmits(['close-modal']);
 </script>
 
 <style scoped>

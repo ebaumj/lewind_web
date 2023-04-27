@@ -38,6 +38,7 @@ const formData = reactive({
   password: "",
 })
 const { show } = defineProps(['show'])
+const emit = defineEmits(['login', 'create-account', 'close-modal']);
 </script>
   
 <style scoped>
