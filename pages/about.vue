@@ -22,7 +22,7 @@
         </form>
         <div class="flex justify-center mt-12 text-lg"><a href='https://play.google.com/store/apps/details?id=com.baumannsw.lewind&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="h-16" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></div>
       </div>
-      <BaseModal v-show="modalShow" @close-modal="modalShow = false" :title="modalTitle" :message="modalMessage" />
+      <BaseModal :show="modalShow" @close-modal="modalShow = false" :title="modalTitle" :message="modalMessage" />
     </div>
 </template>
 

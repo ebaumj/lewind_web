@@ -1,7 +1,9 @@
 <template>
-  <div class="relative z-10" role="dialog">
-    <div class="fixed inset-0 bg-black bg-opacity-75"></div>
-    <div class="fixed inset-0 z-10 overflow-y-auto">
+  <Transition name="background" appear>
+    <div v-if="show" class="fixed inset-0 z-50 bg-black bg-opacity-75"></div>
+  </Transition>
+  <Transition name="dialog" appear>
+    <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto">
       <div class="flex min-h-full justify-center p-8 text-center items-center">
         <!--
           Modal panel, show/hide based on modal state.
@@ -30,13 +32,37 @@
         </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
-  <script setup>
-  const { title, message } = defineProps(['title', 'message'])
-  </script>
+<script setup>
+  const { title, message, show } = defineProps(['title', 'message', 'show'])
+</script>
 
 <style scoped>
-  
+  /* Dialog */
+.dialog-enter-active,
+.dialog-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.dialog-enter-from {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
+}
+.dialog-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(200%);
+}
+
+/* Background */
+.background-enter-active,
+.background-leave-active {
+  transition: opacity .4s linear;
+}
+
+.background-enter-from,
+.background-leave-to {
+  opacity: 0;
+}
 </style>
