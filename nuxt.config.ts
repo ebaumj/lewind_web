@@ -3,6 +3,7 @@ export default defineNuxtConfig({
     build: { transpile: ['@fawmi/vue-google-maps'] },
     modules: [ 
         ['@nuxtjs/tailwindcss', {  }], 
+        ['@nuxtjs/supabase', {  }]
     ],
     app: {
         head: {
@@ -44,6 +45,10 @@ export default defineNuxtConfig({
     },
     ssr: false,
     css: [ '~/assets/css/main.css' ],
+    supabase: {
+        url: process.env.SUPABASE_ACCESS_URL,
+        key: process.env.SUPABASE_ACCESS_KEY
+    }
     /*vite: {
         optimizeDeps: {
             // fast-deep-equal doesnt have default export

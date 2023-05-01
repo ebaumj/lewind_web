@@ -126,7 +126,7 @@ const login = async (email, password) => {
   if(login.result) {
     isLoggedIn.value = true
     user.value = await useGetUser()
-    avatarUsername.value = user.email.substring(0, 1)
+    avatarUsername.value = user.value.email.substring(0, 1)
     displayUser.value = user.email
   }
   else {
