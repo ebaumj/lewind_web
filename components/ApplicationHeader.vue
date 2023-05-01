@@ -91,14 +91,15 @@
 </template>
 
 <script setup>
-const user = ref(await useGetUser())
+//const user = ref(await useGetUser())
+const user = ref(await useGetSupabaseUser())
 const isLoggedIn = ref(user.value !== null)
 const avatarUsername = ref("")
 const displayUser = ref("")
 const showLoginModal = ref(false)
 
 if(isLoggedIn.value) {
-  avatarUsername.value = user.email.substring(0, 1)
+  avatarUsername.value = user.value.email.substring(0, 1)
 }
 
 const baseModalShow = ref(false)
@@ -121,23 +122,26 @@ const toggleProfileMenu = () => {
 }
 
 const login = async (email, password) => {
-  const login = await useLogin(email, password)
+  //const login = await useLogin(email, password)
+  const login = await useSupabaseLogin(email, password)
   showLoginModal.value = false
   if(login.result) {
     isLoggedIn.value = true
-    user.value = await useGetUser()
+    //user.value = await useGetUser()
+    user.value = await useGetSupabaseUser()
     avatarUsername.value = user.value.email.substring(0, 1)
     displayUser.value = user.email
   }
   else {
-    baseModalMessage.value = login.response.json.error_description
+    baseModalMessage.value = login.response
     baseModalTitle.value = "Login Failed"
     baseModalShow.value = true
   }
 }
 
 const createAccount = async (email, password) => {
-  const createAccount = await useCreateAccount(email, password)
+  //const createAccount = await useCreateAccount(email, password)
+  const createAccount = await useCreateSupabaseAccount(email, password)
   showLoginModal.value = false
   if(createAccount.result) {
     baseModalMessage.value = "Your Account was successfully created and you can now log in"
@@ -145,19 +149,20 @@ const createAccount = async (email, password) => {
     baseModalShow.value = true
   }
   else {
-    baseModalMessage.value = createAccount.response.json.msg
-    baseModalTitle.value = "Error " + createAccount.response.json.code
+    baseModalMessage.value = createAccount.response
+    baseModalTitle.value = "Creating Account Failed"
     baseModalShow.value = true
   }
 }
 
 const logout = async () => {
-  const logout = await useLogout()
+  //const logout = await useLogout()
+  const logout = await useSupabaseLogout()
   if(logout.result) {
     isLoggedIn.value = false
   }
   else {
-    baseModalMessage.value = logout.response.json.error_description
+    baseModalMessage.value = logout.response
     baseModalTitle.value = "Logout failed"
     baseModalShow.value = true
   }

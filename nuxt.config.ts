@@ -2,8 +2,8 @@
 export default defineNuxtConfig({
     build: { transpile: ['@fawmi/vue-google-maps'] },
     modules: [ 
-        ['@nuxtjs/tailwindcss', {  }], 
-        ['@nuxtjs/supabase', {  }]
+        '@nuxtjs/tailwindcss', 
+        '@nuxtjs/supabase'
     ],
     app: {
         head: {

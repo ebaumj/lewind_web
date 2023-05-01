@@ -6,6 +6,50 @@ const auth = new GoTrue({
     setCookie: true,
 })
 
+export const useGetSupabaseUser = async () => {
+    //return (await useSupabaseClient().auth.getUser()).data.user
+    return useSupabaseUser()
+}
+
+export const useSupabaseLogin = async (email, password) => {
+    let retval = { result: false, response: "" }
+    const { user, error } = await useSupabaseClient().auth.signInWithPassword({
+        email: email,
+        password: password
+    })
+    if(error)
+        retval.response = error.message
+    else
+        retval.result = true
+    return retval
+}
+
+export const useCreateSupabaseAccount = async (email, password) => {
+    let retval = { result: false, response: "" }
+    const { user, error } = await useSupabaseClient().auth.signUp({
+        email: email,
+        password: password
+    })
+    if(error)
+        retval.response = error.message
+    else
+        retval.result = true
+    return retval
+}
+
+export const useSupabaseLogout = async () => {
+    const user = await useGetSupabaseUser()
+    let retval = { result: true, response: "Loged Out already" }
+    if(user) {
+        const { user, error } = await useSupabaseClient().auth.signOut()
+        if(error)
+            retval.response = error.message
+        else
+            retval.result = true
+    }
+    return retval
+}
+
 export const useGetUser = async () => {
     return await auth.currentUser()
 }
@@ -17,7 +61,7 @@ export const useLogin = async (email, password) => {
         retval.response = response
     }).catch((error) => {
         retval.result = false
-        retval.response = error
+        retval.response = error.json.error_description
     })
     return retval
 }
@@ -29,7 +73,7 @@ export const useCreateAccount = async (email, password) => {
         retval.response = response
     }).catch((error) => {
         retval.result = false
-        retval.response = error
+        retval.response = error.json.msg
     })
     return retval
 }
@@ -43,7 +87,7 @@ export const useLogout = async () => {
             retval.response = response
         }).catch((error) => {
             retval.result = false
-            retval.response = error
+            retval.response = error.json.error_description
         })
     }
     return retval
