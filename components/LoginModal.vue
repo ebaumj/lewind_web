@@ -6,7 +6,7 @@
         <div v-if="show" class="fixed inset-0 z-50 overflow-y-auto" role="dialog">
           <div class="flex min-h-full justify-center p-8 text-center items-center">
             <div class="relative transform overflow-hidden rounded-lg bg-white text-center shadow-xl w-full md:max-w-xl">
-              <div class="bg-white px-4 md:pt-5 py-6 pb-4">
+              <div class="bg-white px-4 md:pt-5 pt-6 pb-2">
                 <div class="justify-center">
                   <div class="mt-3 text-center">
                       <h3 class="text-2xl font-semibold leading-6 text-gray-900 text-center">Login</h3>
@@ -21,6 +21,7 @@
                   </div>
                 </div>
               </div>
+              <div class="px-4 pb-2 text-sm text-left underline text-rose_semi_dark"><span class="cursor-pointer" @click="$emit('reset-password', formData.email)">I fortgot my password</span></div>
               <div class="px-4 pb-6 justify-center">
                 <button @click="$emit('login', formData.email, formData.password)" type="button" class="inline-flex w-full justify-center rounded-md bg-rose_dark_red px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose_red mt-3 w-36">Log In</button>
                 <button @click="$emit('create-account', formData.email, formData.password)" type="button" class="inline-flex w-full justify-center rounded-md bg-rose_dark px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-rose_red my-2 w-36">Create Account</button>
@@ -38,7 +39,7 @@ const formData = reactive({
   password: "",
 })
 const { show } = defineProps(['show'])
-const emit = defineEmits(['login', 'create-account', 'close-modal']);
+const emit = defineEmits(['login', 'create-account', 'close-modal', 'reset-password']);
 </script>
   
 <style scoped>

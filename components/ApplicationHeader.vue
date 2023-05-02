@@ -86,20 +86,18 @@
         </div>
       </Transition>
     </nav>
-    <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" @login="login" @create-account="createAccount" />
+    <LoginModal :show="showLoginModal" @close-modal="showLoginModal = false" @login="login" @create-account="createAccount" @reset-password="resetPassword" />
     <BaseModal :show="baseModalShow" @close-modal="baseModalShow = false" :title="baseModalTitle" :message="baseModalMessage" />
 </template>
 
 <script setup>
-//const user = ref(await useGetUser())
-const user = ref(await useGetSupabaseUser())
-const isLoggedIn = ref(user.value !== null)
+const isLoggedIn = ref(useIsLoggedIn())
 const avatarUsername = ref("")
 const displayUser = ref("")
 const showLoginModal = ref(false)
 
 if(isLoggedIn.value) {
-  avatarUsername.value = user.value.email.substring(0, 1)
+  avatarUsername.value = useGetUser().email.substring(0, 1)
 }
 
 const baseModalShow = ref(false)
@@ -122,15 +120,12 @@ const toggleProfileMenu = () => {
 }
 
 const login = async (email, password) => {
-  //const login = await useLogin(email, password)
-  const login = await useSupabaseLogin(email, password)
+  const login = await useLogin(email, password)
   showLoginModal.value = false
   if(login.result) {
     isLoggedIn.value = true
-    //user.value = await useGetUser()
-    user.value = await useGetSupabaseUser()
-    avatarUsername.value = user.value.email.substring(0, 1)
-    displayUser.value = user.email
+    avatarUsername.value = useGetUser().email.substring(0, 1)
+    displayUser.value = useGetUser().email
   }
   else {
     baseModalMessage.value = login.response
@@ -140,30 +135,45 @@ const login = async (email, password) => {
 }
 
 const createAccount = async (email, password) => {
-  //const createAccount = await useCreateAccount(email, password)
-  const createAccount = await useCreateSupabaseAccount(email, password)
+  const createAccount = await useCreateAccount(email, password)
   showLoginModal.value = false
   if(createAccount.result) {
-    baseModalMessage.value = "Your Account was successfully created and you can now log in"
-    baseModalTitle.value = "Account Created"
+    baseModalMessage.value = "Your account was successfully created. Please check your inbox and confirm your email address."
+    baseModalTitle.value = "Account created"
     baseModalShow.value = true
   }
   else {
     baseModalMessage.value = createAccount.response
-    baseModalTitle.value = "Creating Account Failed"
+    baseModalTitle.value = "Creating Account failed"
     baseModalShow.value = true
   }
 }
 
 const logout = async () => {
-  //const logout = await useLogout()
-  const logout = await useSupabaseLogout()
+  const logout = await useLogout()
+  showLoginModal.value = false
   if(logout.result) {
     isLoggedIn.value = false
+    navigateTo("/")
   }
   else {
     baseModalMessage.value = logout.response
     baseModalTitle.value = "Logout failed"
+    baseModalShow.value = true
+  }
+}
+
+const resetPassword = async (email) => {
+  const passwordReset = await useResetPassword(email)
+  showLoginModal.value = false
+  if(passwordReset.result) {
+    baseModalMessage.value = "Password reset successful. Please check your inbox and follow the link."
+    baseModalTitle.value = "Password reset"
+    baseModalShow.value = true
+  }
+  else {
+    baseModalMessage.value = passwordReset.response
+    baseModalTitle.value = "Password reset failed"
     baseModalShow.value = true
   }
 }
@@ -172,7 +182,7 @@ const logout = async () => {
 <style scoped>
 .router-link-exact-active {
     color: #C80000; /* rose_red */
-    background-color: #2d4053; /* rose_semi_dark */
+    /*background-color: #2d4053; /* rose_semi_dark */
 }
 /*
 Dropdown menu, show/hide based on menu state.

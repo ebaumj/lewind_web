@@ -21,7 +21,6 @@
 </template>
 
 <script setup>
-definePageMeta({ authRequired: false })
 const savedStationsLocal = useGetStationsInStorage()
 </script>
 

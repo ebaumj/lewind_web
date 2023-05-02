@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-definePageMeta({ authRequired: false })
+
 </script>
 
 <style scoped>
