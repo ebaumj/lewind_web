@@ -111,6 +111,11 @@ useNuxtApp().$setPageTranition(() => {
   mobileMenuActive.value = false
   profileMenuActive.value = false
  })
+ useNuxtApp().$setAuthStateChangeCallback((event, session) => { 
+  isLoggedIn.value = useIsLoggedIn()
+  if(!isLoggedIn.value)
+    displayUser.value = ""
+ })
 
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value

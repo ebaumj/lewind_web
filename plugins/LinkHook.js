@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     })
     return {
         provide: {
-            setPageTranition: (transition: any) => { onPageTransition = transition }
+            setPageTranition: (transition) => { onPageTransition = transition }
         }
     }
 })
