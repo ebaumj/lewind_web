@@ -82,7 +82,7 @@ class Authentification {
 
     async resetPassword(email) {
         let retval = { result: false, response: "" }
-        const { data, error } = await useSupabaseClient().auth.resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/resetpassword', })
+        const { data, error } = await useSupabaseClient().auth.resetPasswordForEmail(email, { redirectTo: 'https://lewind.ch/resetpassword', })
         if(error)
             retval.response = error.message
         else
