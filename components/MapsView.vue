@@ -6,7 +6,7 @@
                 :icon="{url: markerIcon, scaledSize: {width: 80, height: 43}}">
                     <GMapInfoWindow :opened="station.showPreview" :closeclick="true" @closeclick="closePreview(station.id)">
                         <Transition name="station-preview" mode="out-in">
-                            <StationPreview v-show="station.previewReady" :name="station.name" :windspeed="station.vent_vitesse" :direction="station.vent_direction" @add-station="addStation(station.id, station.name)" />
+                            <StationPreview v-show="station.previewReady" :name="station.name" :windspeed="station.wind_speed" :direction="station.wind_direction" @add-station="addStation(station.id, station.name)" />
                         </Transition>
                     </GMapInfoWindow>
                 </GMapMarker>

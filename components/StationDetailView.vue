@@ -6,38 +6,38 @@
         <div class="container my-2 mx-auto px-0 md:px-4 grid md:grid-cols-2 grid-cols-1">
             <div class="md:mx-16 mb-0 justify-center items-center md:p-20 p-8">
                 <div class="square bg-rose bg-contain bg-no-repeat justify-center items-center">
-                    <img class="square flex justify-center items-center" src="~/assets/images/compass_inside.png" :style="{transform: `rotate(${parseInt(windData.vent_direction) + 180}deg)`}">
+                    <img class="square flex justify-center items-center" src="~/assets/images/compass_inside.png" :style="{transform: `rotate(${parseInt(windData.wind_direction) + 180}deg)`}">
                 </div>
-                <div class="flex justify-center items-center mt-10 text-bold">{{ windData.vent_direction_cardinal }} {{ windData.vent_direction }}&deg</div>
+                <div class="flex justify-center items-center mt-10 text-bold">{{ windData.wind_direction_text }} {{ windData.wind_direction }}&deg</div>
             </div> 
             <div class="w-full flex items-center">
                 <div class="w-full md:px-6 px-2 grid grid-rows-2 items-center">
                     <div class="grid grid-cols-2 md:gap-6 gap-2 md:mb-6 mb-4">
                         <div class="shadow-inner rounded-md bg-rose_very_light">
-                            <ColorGradient :windspeed="windData.vent_vitesse" direction="to-t" class="overflow-clip" addClass="rounded-md">
+                            <ColorGradient :windspeed="windData.wind_speed" direction="to-t" class="overflow-clip" addClass="rounded-md">
                                 <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Wind Average</div>
-                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.vent_vitesse }} kts</div>
+                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.wind_speed }} kts</div>
                             </ColorGradient>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
-                            <ColorGradient :windspeed="windData.vent_rafale" direction="to-t" class="overflow-clip" addClass="rounded-md">
+                            <ColorGradient :windspeed="windData.wind_gust" direction="to-t" class="overflow-clip" addClass="rounded-md">
                                 <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Wind Gust</div>
-                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.vent_rafale }} kts</div>
+                                <div class="flex justify-center items-center md:pb-10 pb-4">{{ windData.wind_gust }} kts</div>
                             </ColorGradient>
                         </div>
                     </div>
                     <div class="grid grid-cols-3 md:gap-6 gap-2">
                         <div class="shadow-inner rounded-md bg-rose_very_light">
                             <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Temperature</div>
-                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.temp }}&degC</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.temperature }}&degC</div>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
                             <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Humidity</div>
-                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.humidite }}%</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.humidity }}%</div>
                         </div>
                         <div class="shadow-inner rounded-md bg-rose_very_light">
                             <div class="flex justify-center items-center md:pt-10 pt-4 mb-1 md:text-xl text-sm">Preassure</div>
-                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.pression }}hPa</div>
+                            <div class="flex justify-center items-center md:pb-10 pb-4 md:text-4xl text-xl">{{ windData.preassure }}hPa</div>
                         </div>
                     </div>
                 </div>
