@@ -21,7 +21,11 @@
 </template>
 
 <script setup>
-const savedStationsLocal = useGetStationsInStorage()
+const savedStationsLocal = ref(await useGetStationsInStorage())
+
+useAuthentification().onAuthStateChangedCallback(async () => {
+    savedStationsLocal.value = await useGetStationsInStorage()
+}, "Index")
 </script>
 
 <style scoped>

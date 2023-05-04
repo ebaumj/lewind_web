@@ -1,7 +1,7 @@
 <template>
     <div class="md:text-4xl text-2xl min-h-screen py-0 px-0 bg-white rounded-md shadow-md w-full">
         <div class="md:px-4 px-2 py-8 justify-center flex w-full">
-            <h1>{{ windData.name }}</h1>
+            <h1>{{ name ? name : windData.name }}</h1>
         </div>
         <div class="container my-2 mx-auto px-0 md:px-4 grid md:grid-cols-2 grid-cols-1">
             <div class="md:mx-16 mb-0 justify-center items-center md:p-20 p-8">
@@ -66,7 +66,7 @@ const startIndex = 3
 
 const colors = resolveConfig(tailwindConfig).theme.colors
 
-const { id } = defineProps(['id'])
+const { id, name } = defineProps(['id', 'name'])
 const windData = (await useFetch("/api/station_details/" + id)).data.value
 const history = (await useFetch("/api/station_history/" + id)).data.value
 

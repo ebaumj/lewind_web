@@ -18,7 +18,7 @@
 <script setup>
 import markerIcon from '~/assets/images/iconMapS.png'
 
-const savedStationsLocal = useGetStationsInStorage()
+const savedStationsLocal = ref(await useGetStationsInStorage())
 const { data } = (await useFetch("/api/all_stations/"))
 if(data == null) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })

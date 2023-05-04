@@ -2,7 +2,7 @@
     <div>
       <Transition name="station-detail" mode="out-in">
         <Suspense>
-            <StationDetailView :id="stationId" />
+            <StationDetailView :id="stationId" :name="stationName" />
             <template #fallback>
                 <StationDetailViewSkeleton />
             </template>
@@ -15,9 +15,16 @@
 </template>
 
 <script setup>
-const savedStationsLocal = useGetStationsInStorage()
+const savedStationsLocal = ref(await useGetStationsInStorage())
 const { stationId } = useRoute().params
-const stationRemoved = ref(false)
+const stationName = ref(savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name)
+const stationRemoved = ref(savedStationsLocal.value.filter((station) => station.id == stationId).length == 0)
+
+useAuthentification().onAuthStateChangedCallback(async () => {
+    savedStationsLocal.value = await useGetStationsInStorage()
+    stationName.value = savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name
+    stationRemoved.value = savedStationsLocal.value.filter((station) => station.id == stationId).length == 0
+}, "StationId")
 
 const removeFromFavorites = () => {
     savedStationsLocal.value = useSetStationsInStorage(savedStationsLocal.value.filter((station) => station.id != stationId))
