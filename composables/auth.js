@@ -1,114 +1,137 @@
+class Authentification {
+    user = null
+    resetPasswordActive = false
+    onAuthStateChange = []
 
-const user = ref(await useSupabaseUser())
-
-const checkPassword = (password) => {
-    if(password === "")
-        return false
-    return true
-}
-
-export const useGetUser = () => {
-    return user.value
-}
-
-export const useIsLoggedIn = () => {
-    return (user.value !== null)
-}
-
-export const useLogin = async (email, password) => {
-    let retval = { result: false, response: "" }
-    const { data, error } = await useSupabaseClient().auth.signInWithPassword({
-        email: email,
-        password: password
-    })
-    if(error) {
-        retval.response = error.message
-        user.value = null
+    constructor() {
+        useSupabaseClient().auth.onAuthStateChange((event, session) => {
+            if(session?.user)
+                this.user = session.user
+            else
+                this.user = null
+            if(event == "PASSWORD_RECOVERY")
+                this.resetPasswordActive = true
+            else
+                this.resetPasswordActive = false
+            this.onAuthStateChange.forEach(element => element.callback())
+        })
     }
-    else {
-        user.value = data.user
-        retval.result = true
+
+    onAuthStateChangedCallback(callback, id) {
+        let elementExists = false
+        this.onAuthStateChange.forEach(element => {
+            if(element.id === id) {
+                element.callback = callback
+                elementExists = true
+            }
+        });
+        if(!elementExists)
+            this.onAuthStateChange.push({ callback : callback, id: id })
     }
-    return retval
-}
+    
+    getUser() {
+        return this.user
+    }
 
-export const useCreateAccount = async (email, password) => {
-    let retval = { result: false, response: "" }
-    const { data, error } = await useSupabaseClient().auth.signUp({
-        email: email,
-        password: password,
-        user_metadata: { first_name: "", last_name: "" }
-    })
-    if(error)
-        retval.response = error.message
-    else
-        retval.result = true
-    return retval
-}
+    isLoggedIn() {
+        return (this.user !== null)
+    }
+    
+    isResetPasswordActive(){
+        return this.resetPasswordActive
+    }
 
-export const useLogout = async () => {
-    const user = await useSupabaseUser()
-    let retval = { result: true, response: "Loged Out already" }
-    if(useIsLoggedIn()) {
-        const { data, error } = await useSupabaseClient().auth.signOut()
+    async login(email, password) {
+        let retval = { result: false, response: "" }
+        const { data, error } = await useSupabaseClient().auth.signInWithPassword({
+            email: email,
+            password: password
+        })
         if(error)
             retval.response = error.message
-        else {
+        else
             retval.result = true
-            user.value = null
-        }
+        return retval
     }
-    return retval
-}
 
-export const useResetPassword = async (email) => {
-    let retval = { result: false, response: "" }
-    const { data, error } = await useSupabaseClient().auth.resetPasswordForEmail(email)
-    if(error) {
-        retval.response = error.message
-    }
-    else
-        retval.result = true
-    return retval
-}
-
-export const useChangePassword = async (old_password, new_password) => {
-    let retval = { result: false, response: "" }
-    if(checkPassword(old_password) && useIsLoggedIn()) {
-        const { data, error } = await useSupabaseClient().auth.updateUser({password: new_password})
-        if(error) {
+    async createAccount(email, password) {
+        let retval = { result: false, response: "" }
+        const { data, error } = await useSupabaseClient().auth.signUp({
+            email: email,
+            password: password,
+            user_metadata: { first_name: "", last_name: "" }
+        })
+        if(error)
             retval.response = error.message
-        }
-        else {
-            user.value = data.user
+        else
             retval.result = true
-        }
+        return retval
     }
-    else
-        retval.response = "Old password is not correct"
-    return retval
-}
 
-export const useDeleteUser = async (password) => {
-    let retval = { result: false, response: "" }
-    if(checkPassword(password) && useIsLoggedIn()) {
-        const { data, error } = await useSupabaseClient().rpc('delete_user')
-        console.log(data)
-        console.log(error)
+    async logout() {
+        let retval = { result: true, response: "Loged Out already" }
+        if(this.isLoggedIn()) {
+            const { data, error } = await useSupabaseClient().auth.signOut()
+            if(error)
+                retval.response = error.message
+            else
+                retval.result = true
+        }
+        return retval
+    }
+
+    async resetPassword(email) {
+        let retval = { result: false, response: "" }
+        const { data, error } = await useSupabaseClient().auth.resetPasswordForEmail(email, { redirectTo: 'http://localhost:3000/resetpassword', })
+        if(error)
+            retval.response = error.message
+        else
+            retval.result = true
+        return retval
+    }
+
+    async changePassword(old_password, new_password) {
+        let retval = { result: false, response: "" }
+        const { data, error } = await useSupabaseClient().rpc('change_user_password', { current_plain_password: old_password, new_plain_password: new_password })
+        if(error)
+            retval.response = error.message
+        else
+            retval.result = true
+        return retval
+    }
+
+    async changePasswordFromReset(new_password) {
+        let retval = { result: false, response: "Not Alowed" }
+        if(resetPasswordActive.value) {
+            const { data, error } = await useSupabaseClient().auth.updateUser({ password: new_password })
+            if(error)
+                retval.response = error.message
+            else
+                retval.result = true
+        }
+        return retval
+    }
+
+    async deleteUser(password) {
+        let retval = { result: false, response: "" }
+        const { data, error } = await useSupabaseClient().rpc('delete_user', { current_plain_password: password })
         if(error) {
             retval.response = error.message
         }
         else {
             await useSupabaseClient().auth.signOut()
-            user.value = null
             retval.result = true
         }
+        return retval
     }
-    else
-        retval.response = "Password is not correct"
-    return retval
+
+    async changeName(first_name, last_name) {
+
+    }
 }
 
-export const useChangeName = async (first_name, last_name) => {
+const auth = new Authentification()
 
+export const useAuthentification = () => {
+    return auth
 }

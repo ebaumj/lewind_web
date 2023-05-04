@@ -5,7 +5,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     });
     return {
         provide: {
-            setAuthStateChangeCallback: (callback) => { onAuthStateChange = callback }
+            setAuthStateChangeCallback: (callback) => { onAuthStateChange = callback },
         }
     }
 })

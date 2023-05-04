@@ -17,7 +17,7 @@
               </div>
             </div>
           </div>
-          <div class="hidden md:block">
+          <div v-if="!resetPasswordActive" class="hidden md:block">
             <div class="ml-4 flex items-center md:ml-6">
               <!-- Profile dropdown -->
               <div class="relative ml-3">
@@ -67,7 +67,7 @@
             <NuxtLink to="/stationsMap" class="hover:bg-rose_semi_dark block rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">map</i>Stations Map</NuxtLink>
             <NuxtLink to="/about" class="hover:bg-rose_semi_dark rounded-md px-3 py-2 text-xl font-medium flex items-center"><i class="material-icons mr-2">info</i>About</NuxtLink>
           </div>
-          <div class="border-t border-gray-700 pt-4 pb-3 text-rose_very_light">
+          <div v-if="!resetPasswordActive" class="border-t border-gray-700 pt-4 pb-3 text-rose_very_light">
             <div class="flex items-center px-5">
               <div class="flex-shrink-0">
                   <img v-show="isLoggedIn" class="h-10 w-10 rounded-full" :key="avatarUsername" :src="`https://ui-avatars.com/api/?name=${avatarUsername}&size=512&background=C80000&color=c5ccd3&bold=true&length=1&font-size=0.5`" alt="">
@@ -91,14 +91,11 @@
 </template>
 
 <script setup>
-const isLoggedIn = ref(useIsLoggedIn())
-const avatarUsername = ref("")
-const displayUser = ref("")
+const isLoggedIn = ref(useAuthentification().isLoggedIn())
+const avatarUsername = ref(useAuthentification().getUser()?.email.substring(0, 1))
+const displayUser = ref(useAuthentification().getUser()?.email)
+const resetPasswordActive = ref(useAuthentification().isResetPasswordActive())
 const showLoginModal = ref(false)
-
-if(isLoggedIn.value) {
-  avatarUsername.value = useGetUser().email.substring(0, 1)
-}
 
 const baseModalShow = ref(false)
 const baseModalMessage = ref("")
@@ -111,11 +108,12 @@ useNuxtApp().$setPageTranition(() => {
   mobileMenuActive.value = false
   profileMenuActive.value = false
  })
- useNuxtApp().$setAuthStateChangeCallback((event, session) => { 
-  isLoggedIn.value = useIsLoggedIn()
-  if(!isLoggedIn.value)
-    displayUser.value = ""
- })
+useAuthentification().onAuthStateChangedCallback(() => {
+  isLoggedIn.value = useAuthentification().isLoggedIn()
+  resetPasswordActive.value = useAuthentification().isResetPasswordActive()
+  displayUser.value = useAuthentification().getUser()?.email
+  avatarUsername.value = useAuthentification().getUser()?.email.substring(0, 1)
+}, "ApplicationHeader")
 
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value
@@ -125,14 +123,9 @@ const toggleProfileMenu = () => {
 }
 
 const login = async (email, password) => {
-  const login = await useLogin(email, password)
+  const login = await useAuthentification().login(email, password)
   showLoginModal.value = false
-  if(login.result) {
-    isLoggedIn.value = true
-    avatarUsername.value = useGetUser().email.substring(0, 1)
-    displayUser.value = useGetUser().email
-  }
-  else {
+  if(!login.result) {
     baseModalMessage.value = login.response
     baseModalTitle.value = "Login Failed"
     baseModalShow.value = true
@@ -140,7 +133,7 @@ const login = async (email, password) => {
 }
 
 const createAccount = async (email, password) => {
-  const createAccount = await useCreateAccount(email, password)
+  const createAccount = await useAuthentification().createAccount(email, password)
   showLoginModal.value = false
   if(createAccount.result) {
     baseModalMessage.value = "Your account was successfully created. Please check your inbox and confirm your email address."
@@ -155,10 +148,9 @@ const createAccount = async (email, password) => {
 }
 
 const logout = async () => {
-  const logout = await useLogout()
+  const logout = await useAuthentification().logout()
   showLoginModal.value = false
   if(logout.result) {
-    isLoggedIn.value = false
     navigateTo("/")
   }
   else {
@@ -169,7 +161,7 @@ const logout = async () => {
 }
 
 const resetPassword = async (email) => {
-  const passwordReset = await useResetPassword(email)
+  const passwordReset = await useAuthentification().resetPassword(email)
   showLoginModal.value = false
   if(passwordReset.result) {
     baseModalMessage.value = "Password reset successful. Please check your inbox and follow the link."
