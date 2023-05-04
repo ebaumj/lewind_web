@@ -18,7 +18,7 @@
 <script setup>
 import markerIcon from '~/assets/images/iconMapS.png'
 
-const savedStationsLocal = ref(await useGetStationsInStorage())
+const savedStationsLocal = ref(await useStorage().getAllStations())
 const { data } = (await useFetch("/api/all_stations/"))
 if(data == null) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
@@ -70,8 +70,7 @@ const hideMarker = (id) => {
 }
 
 const addStation = (id, name) => {
-    savedStationsLocal.value.push({id: id, name: name })
-    useSetStationsInStorage(savedStationsLocal.value)
+    savedStationsLocal.value = useStorage().addStation(id, name)
     closePreview(id)
     setTimeout(()=>hideMarker(id), 50)  // This way, the Info Window closes immediately
 }
