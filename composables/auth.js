@@ -1,3 +1,5 @@
+import { resolve } from "chart.js/dist/helpers/helpers.options"
+
 class Authentification {
     user = null
     resetPasswordActive = false
@@ -37,9 +39,13 @@ class Authentification {
         return (this.user !== null)
     }
     
-    async isResetPasswordActive() {
-        console.log(await useSupabaseClient().auth.getSession())
+    isResetPasswordActive() {
         return this.resetPasswordActive
+    }
+
+    async waitForSession() {
+        const session = await useSupabaseClient().auth.getSession()
+        return session
     }
 
     async login(email, password) {
