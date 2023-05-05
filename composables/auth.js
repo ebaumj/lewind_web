@@ -102,7 +102,7 @@ class Authentification {
 
     async changePasswordFromReset(new_password) {
         let retval = { result: false, response: "Not Alowed" }
-        if(resetPasswordActive.value) {
+        if(this.resetPasswordActive) {
             const { data, error } = await useSupabaseClient().auth.updateUser({ password: new_password })
             if(error)
                 retval.response = error.message
