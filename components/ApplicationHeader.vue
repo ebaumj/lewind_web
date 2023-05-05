@@ -33,7 +33,7 @@
                   <div v-show="profileMenuActive" class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
                     <!-- Active: "bg-gray-100", Not Active: "" -->
                     <NuxtLink to="/profile" v-show="isLoggedIn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</NuxtLink>
-                    <NuxtLink to="/settings" v-show="isLoggedIn" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</NuxtLink>
+                    <NuxtLink to="/settings" class="block px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</NuxtLink>
                     <button v-show="isLoggedIn" @click="logout(); profileMenuActive = false" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
                     <button v-show="!isLoggedIn" @click="showLoginModal = true; profileMenuActive = false" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-rose_very_light" role="menuitem" tabindex="-1" id="user-menu-item-2">Log in</button>
                   </div>
@@ -78,7 +78,7 @@
             </div>
             <div class="mt-3 space-y-1 px-2 text-rose_very_light">
               <NuxtLink to="/profile" v-show="isLoggedIn" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-rose_semi_dark" role="menuitem" tabindex="-1" id="user-menu-item-0">Your Profile</NuxtLink>
-              <NuxtLink to="/settings" v-show="isLoggedIn" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-rose_semi_dark" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</NuxtLink>
+              <NuxtLink to="/settings" class="block rounded-md px-3 py-2 text-base font-medium hover:bg-rose_semi_dark" role="menuitem" tabindex="-1" id="user-menu-item-1">Settings</NuxtLink>
               <button v-show="isLoggedIn" @click="logout(); profileMenuActive = false" class="block w-full text-left rounded-md px-3 py-2 text-base font-medium hover:bg-rose_semi_dark" role="menuitem" tabindex="-1" id="user-menu-item-2">Log out</button>
               <button v-show="!isLoggedIn" @click="showLoginModal = true; profileMenuActive = false" class="block w-full text-left rounded-md px-3 py-2 text-base font-medium hover:bg-rose_semi_dark" role="menuitem" tabindex="-1" id="user-menu-item-2">Log in</button>
             </div>

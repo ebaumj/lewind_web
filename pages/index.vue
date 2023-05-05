@@ -2,7 +2,7 @@
     <div>
         <div class="container my-0 mx-auto px-0 md:px-4">
             <div class="flex flex-wrap -mx-1 lg:-mx-4">
-                <div v-for="windStation in savedStationsLocal" :key="windStation.id" class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 gap-2">
+                <div v-for="windStation in savedStations" :key="windStation.id" class="my-1 px-1 w-full md:w-1/2 lg:my-4 lg:px-4 lg:w-1/3 gap-2">
                     <div class="overflow-hidden rounded-lg shadow-lg">
                         <Transition name="station-card" mode="out-in">
                             <Suspense>
@@ -14,17 +14,18 @@
                         </Transition>
                     </div>
                 </div>
-                <div v-if="savedStationsLocal.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations!</div>
+                <div v-if="savedStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations!</div>
+                <div v-if="savedStations.length === 0 && !useAuthentification().isLoggedIn()" class="flex justify-center text-center w-full text-lg">Log in to synchronize your Wind Stations.</div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-const savedStationsLocal = ref(await useStorage().getAllStations())
+const savedStations = ref(await useStorage().getAllStations())
 
 useAuthentification().onAuthStateChangedCallback(async () => {
-    savedStationsLocal.value = await useStorage().getAllStations()
+    savedStations.value = await useStorage().getAllStations()
 }, "Index")
 </script>
 

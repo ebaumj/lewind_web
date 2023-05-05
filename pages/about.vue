@@ -37,6 +37,9 @@ const modalShow = ref(false)
 const modalMessage = ref("")
 const modalTitle = ref("")
 
+if(useAuthentification().isLoggedIn())
+  formData.email = useAuthentification().getUser().email
+
 const submit = async (form) => {
   await $fetch('/api/contact/', {
     method: 'POST',

@@ -4,7 +4,7 @@ class Storage {
 
     constructor() {
         this.getAllStations()
-     }
+    }
 
     async getAllStations() {
         const dataInStorage = JSON.parse(localStorage.getItem('windStations'))
@@ -19,6 +19,7 @@ class Storage {
                 this.savedStationsRemote = stations.map((station) => { return { id: station.station_id, name: station.station_name } })
             else {
                 this.savedStationsRemote = []
+                // Error Handling
             }
         }
 
@@ -34,6 +35,7 @@ class Storage {
             if(!error)
                 this.savedStationsRemote.push({id: id, name: name })
             else {
+                console.log(error)
                 // Error Handling
             }
         }
@@ -54,6 +56,7 @@ class Storage {
             if(!error)
                 this.savedStationsRemote = this.savedStationsRemote.filter((station) => station.id != id)
             else {
+                console.log(error)
                 // Error Handling
             }
         }
@@ -72,13 +75,20 @@ class Storage {
         if(useAuthentification().isLoggedIn()) {
             const { data, error } = await useSupabaseClient().from('stations').update({ station_name: name }).eq('station_id', id)
             if(!error)
-                this.savedStationsRemote.filter((station) => station.id != id)[0]?.name = name
+                this.savedStationsRemote.forEach((element, index) => { 
+                    if(element.id === id) 
+                        this.savedStationsRemote[index].name = name 
+                    });
             else {
+                console.log(error)
                 // Error Handling
             }
         }
         else {
-            this.savedStationsLocal.filter((station) => station.id != id)[0]?.name = name
+            this.savedStationsLocal.forEach((element, index) => { 
+                if(element.id === id) 
+                    this.savedStationsLocal[index].name = name 
+                });
             localStorage.setItem('windStations', JSON.stringify(this.savedStationsLocal))
         }
 
