@@ -1,5 +1,3 @@
-import { resolve } from "chart.js/dist/helpers/helpers.options"
-
 class Authentification {
     user = null
     resetPasswordActive = false
