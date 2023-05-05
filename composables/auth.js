@@ -37,7 +37,8 @@ class Authentification {
         return (this.user !== null)
     }
     
-    isResetPasswordActive(){
+    async isResetPasswordActive() {
+        console.log(await useSupabaseClient().auth.getSession())
         return this.resetPasswordActive
     }
 
