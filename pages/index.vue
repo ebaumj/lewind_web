@@ -14,7 +14,7 @@
                         </Transition>
                     </div>
                 </div>
-                <div v-if="savedStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations!</div>
+                <div v-if="savedStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations.</div>
                 <div v-if="savedStations.length === 0 && !useAuthentification().isLoggedIn()" class="flex justify-center text-center w-full text-lg">Log in to synchronize your Wind Stations.</div>
             </div>
         </div>
