@@ -1,6 +1,7 @@
 class Authentification {
     user = null
     resetPasswordActive = false
+    callbackActive = false
     onAuthStateChange = []
 
     constructor() {
@@ -11,8 +12,9 @@ class Authentification {
                 this.user = null
             if(event == "PASSWORD_RECOVERY")
                 this.resetPasswordActive = true
-            else
+            else if(event != "SIGNED_IN")
                 this.resetPasswordActive = false
+            this.callbackActive = true
             this.onAuthStateChange.forEach(element => element.callback())
         })
     }
@@ -42,8 +44,21 @@ class Authentification {
     }
 
     async waitForSession() {
-        const session = await useSupabaseClient().auth.getSession()
-        return session
+        const { data, error} = await new Promise((resolve, reject) => {
+            if(this.callbackActive)
+                resolve(this.resetPasswordActive)
+            else
+                setTimeout(() => {
+                    if(this.callbackActive)
+                        resolve(this.resetPasswordActive)
+                    else
+                        reject("Couldnt resolve Promise")
+                }, 500);
+        })
+        if(error)
+            return false
+        else
+            return true
     }
 
     async login(email, password) {
@@ -111,8 +126,10 @@ class Authentification {
             const { data, error } = await useSupabaseClient().auth.updateUser({ password: new_password })
             if(error)
                 retval.response = error.message
-            else
+            else {
+                this.resetPasswordActive = false
                 retval.result = true
+            }
         }
         return retval
     }
