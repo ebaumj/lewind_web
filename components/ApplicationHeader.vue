@@ -108,7 +108,7 @@ useNuxtApp().$setPageTranition(() => {
   mobileMenuActive.value = false
   profileMenuActive.value = false
  })
-useAuthentification().onAuthStateChangedCallback(() => {
+useAuthentification().onAuthStateChangedCallback(async () => {
   isLoggedIn.value = useAuthentification().isLoggedIn()
   resetPasswordActive.value = useAuthentification().isResetPasswordActive()
   displayUser.value = useAuthentification().getUser()?.email
