@@ -5,8 +5,8 @@
             <div class="container my-0 mx-auto px-0 md:px-4">
                 <draggable class="flex flex-wrap -mx-1 lg:-mx-4" v-model="savedStations" item-key="element.id" ghost-class="moving-card" :animation="300" @change="changeIndex">
                     <template #item="{ element: windStation, index }">
-                        <div class="md:p-4 p-2 my-1 w-full md:w-1/2 lg:my-4 lg:w-1/3 gap-2 bg-rose_light shadow-md rounded-lg cursor-move">
-                            <div class="overflow-hidden">
+                        <div class="w-full md:w-1/2 lg:w-1/3 ">
+                            <div class="md:p-4 p-2 my-1 overflow-hidden mx-1 bg-rose_light shadow-md rounded-lg cursor-move">
                                 <div class="flex">
                                     <div class="mr-2 items-center justify-center flex"><IconsMove class="fill-rose_dark opacity-50" /></div>
                                     <input @input="windStation.changed = true" v-model="windStation.name" type="text" :name="`name_${index}`" class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2 " placeholder="Password" required>

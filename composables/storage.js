@@ -14,9 +14,9 @@ class Storage {
             this.savedStationsLocal = []
 
         if(useAuthentification().isLoggedIn()) {
-            let { data: stations, error } = await useSupabaseClient().from('stations').select('station_id, station_name')
+            let { data: stations, error } = await useSupabaseClient().from('stations').select('station_id, station_name, index')
             if(!error)
-                this.savedStationsRemote = stations.map((station) => { return { id: station.station_id, name: station.station_name } })
+                this.savedStationsRemote = stations.map((station) => { return { id: station.station_id, name: station.station_name, index: station.index } })
             else {
                 this.savedStationsRemote = []
                 // Error Handling
@@ -40,7 +40,7 @@ class Storage {
             }
         }
         else {
-            this.savedStationsLocal.push({id: id, name: name, index: this.localStorage.length })
+            this.savedStationsLocal.push({id: id, name: name, index: this.savedStationsLocal.length })
             localStorage.setItem('windStations', JSON.stringify(this.savedStationsLocal))
         }
 
@@ -53,8 +53,14 @@ class Storage {
     async removeStation(id) {
         if(useAuthentification().isLoggedIn()) {
             const { data, error } = await useSupabaseClient().from('stations').delete().eq('station_id', id)
-            if(!error)
+            if(!error) {
                 this.savedStationsRemote = this.savedStationsRemote.filter((station) => station.id != id)
+                this.savedStationsRemote.sort((a, b) => { return a.index - b.index })
+                this.savedStationsRemote.forEach((item, index) => { 
+                    item.index = index
+                    this.changeStationIndex(item.id, item.index)
+                })
+            }
             else {
                 console.log(error)
                 // Error Handling
@@ -62,6 +68,8 @@ class Storage {
         }
         else {
             this.savedStationsLocal = this.savedStationsLocal.filter((station) => station.id != id)
+            this.savedStationsLocal.sort((a, b) => { return a.index - b.index })
+            this.savedStationsLocal.forEach((item, index) => { item.index = index })
             localStorage.setItem('windStations', JSON.stringify(this.savedStationsLocal))
         }
 
