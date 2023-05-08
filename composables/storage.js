@@ -97,6 +97,33 @@ class Storage {
         else
             return this.savedStationsLocal
     }
+
+    async changeStationIndex(id, new_index) {
+        if(useAuthentification().isLoggedIn()) {
+            const { data, error } = await useSupabaseClient().from('stations').update({ index: new_index }).eq('station_id', id)
+            if(!error)
+                this.savedStationsRemote.forEach((element, index) => { 
+                    if(element.id === id) 
+                        this.savedStationsRemote[index].index = new_index 
+                    });
+            else {
+                console.log(error)
+                // Error Handling
+            }
+        }
+        else {
+            this.savedStationsLocal.forEach((element, index) => { 
+                if(element.id === id) 
+                    this.savedStationsLocal[index].index = new_index 
+                });
+            localStorage.setItem('windStations', JSON.stringify(this.savedStationsLocal))
+        }
+
+        if(useAuthentification().isLoggedIn())
+            return this.savedStationsRemote
+        else
+            return this.savedStationsLocal
+    }
 }
 
 const storage = new Storage()
