@@ -5,7 +5,6 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss', 
         '@nuxtjs/supabase'
     ],
-    plugins: [{ src: 'plugins/vuedraggable.js', ssr: false }],
     app: {
         head: {
             title: "Le Wind",
