@@ -35,11 +35,11 @@ const modalTitle = ref("")
 const orderChanged = ref(false)
 
 const savedStations = ref((await useStorage().getAllStations()).map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } }))
-savedStations.value.sort((a, b) => a.index - b.index)
+savedStations.value.sort((a, b) => { return a.index - b.index })
 
 useAuthentification().onAuthStateChangedCallback(async () => {
     savedStations.value = (await useStorage().getAllStations()).map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } })
-    savedStations.value.sort((a, b) => a.index - b.index)
+    savedStations.value.sort((a, b) => { return a.index - b.index })
 }, "StationNames")
 
 const updateName = async (station) => {

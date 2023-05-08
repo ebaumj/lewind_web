@@ -31,16 +31,16 @@ class Storage {
 
     async addStation(id, name) {
         if(useAuthentification().isLoggedIn()) {
-            const { data, error } = await useSupabaseClient().from('stations').insert([{ station_id: id, station_name: name, user_id: useAuthentification().getUser().id }])
+            const { data, error } = await useSupabaseClient().from('stations').insert([{ station_id: id, station_name: name, user_id: useAuthentification().getUser().id, index: this.savedStationsRemote.length }])
             if(!error)
-                this.savedStationsRemote.push({id: id, name: name })
+                this.savedStationsRemote.push({id: id, name: name, index: this.savedStationsRemote.length })
             else {
                 console.log(error)
                 // Error Handling
             }
         }
         else {
-            this.savedStationsLocal.push({id: id, name: name })
+            this.savedStationsLocal.push({id: id, name: name, index: this.localStorage.length })
             localStorage.setItem('windStations', JSON.stringify(this.savedStationsLocal))
         }
 

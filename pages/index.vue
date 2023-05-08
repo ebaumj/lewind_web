@@ -23,12 +23,12 @@
 
 <script setup>
 const savedStations = ref(await useStorage().getAllStations())
-savedStations.value.sort((a, b) => { a.index - b.index })
+savedStations.value.sort((a, b) => { return a.index - b.index })
 console.log(savedStations.value)
 
 useAuthentification().onAuthStateChangedCallback(async () => {
     savedStations.value = await useStorage().getAllStations()
-    savedStations.value.sort((a, b) => { a.index - b.index })
+    savedStations.value.sort((a, b) => { return a.index - b.index })
 }, "Index")
 </script>
 
