@@ -3,7 +3,7 @@
         <div class="md:text-4xl text-2xl md:pb-6 pb-4 p-6 bg-white rounded-md shadow-md w-full max-w-4xl">
             <div class="flex justify-center items-center w-full mb-6"><h1 class="flex justify-center font-semibold">Your observed Stations</h1></div>
             <div class="container my-0 mx-auto px-0 md:px-4">
-                <draggable class="flex flex-wrap -mx-1 lg:-mx-4" v-model="savedStations" item-key="element.id" ghost-class="moving-card" :animation="300" @change="changeIndex">
+                <draggable class="flex flex-wrap -mx-1 lg:-mx-4" v-model="savedStations" item-key="element.id" ghost-class="moving-card" drag-class="preview-card" :animation="300" @change="changeIndex">
                     <template #item="{ element: windStation, index }">
                         <div class="w-full md:w-1/2 lg:w-1/3 ">
                             <div class="md:p-4 p-2 my-1 overflow-hidden mx-1 bg-rose_light shadow-md rounded-lg cursor-move">
@@ -64,7 +64,14 @@ const saveOrder = () => {
 </script>
 
 <style scoped>
-.moving-card {
+.moving-card > div {
+  background-color: #96A2AE;
   opacity: 50%;
+}
+.moving-card > div > div {
+  visibility: hidden;
+}
+.preview-card > div {
+  transform: rotate(-5deg);
 }
 </style>
