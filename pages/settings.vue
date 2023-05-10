@@ -33,14 +33,22 @@ const modalShow = ref(false)
 const modalMessage = ref("")
 const modalTitle = ref("")
 const orderChanged = ref(false)
+const savedStations = ref([])
 
-const savedStations = ref((await useStorage().getAllStations()).map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } }))
-savedStations.value.sort((a, b) => { return a.index - b.index })
-
-useAuthentification().onAuthStateChangedCallback(async () => {
-    savedStations.value = (await useStorage().getAllStations()).map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } })
-    savedStations.value.sort((a, b) => { return a.index - b.index })
-}, "StationNames")
+onMounted(async () => {
+    const stationsTemp = await useStorage().getAllStations()
+    if(stationsTemp.length > 0) {
+        savedStations.value = stationsTemp.map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } })
+        savedStations.value.sort((a, b) => { return a.index - b.index })
+    }
+    useAuthentification().onAuthStateChangedCallback(async () => {
+        const stationsTemp = await useStorage().getAllStations()
+        if(stationsTemp.length > 0) {
+            savedStations.value = (await useStorage().getAllStations()).map((station) => { return { id: station.id, name: station.name, changed: false, index: station.index } })
+            savedStations.value.sort((a, b) => { return a.index - b.index })
+        }
+    }, "StationNames")
+})
 
 const updateName = async (station) => {
     await useStorage().changeStationName(station.id, station.name)

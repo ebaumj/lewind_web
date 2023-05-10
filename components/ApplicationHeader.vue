@@ -91,10 +91,10 @@
 </template>
 
 <script setup>
-const isLoggedIn = ref(useAuthentification().isLoggedIn())
-const avatarUsername = ref(useAuthentification().getUser()?.email.substring(0, 1))
-const displayUser = ref(useAuthentification().getUser()?.email)
-const resetPasswordActive = ref(useAuthentification().isResetPasswordActive())
+const isLoggedIn = ref(false)
+const avatarUsername = ref("")
+const displayUser = ref("")
+const resetPasswordActive = ref(false)
 const showLoginModal = ref(false)
 
 const baseModalShow = ref(false)
@@ -104,16 +104,22 @@ const baseModalTitle = ref("")
 const mobileMenuActive = ref(false)
 const profileMenuActive = ref(false)
 
-useNuxtApp().$setPageTranition(() => { 
-  mobileMenuActive.value = false
-  profileMenuActive.value = false
- })
-useAuthentification().onAuthStateChangedCallback(async () => {
+const updateAuth = () => {
   isLoggedIn.value = useAuthentification().isLoggedIn()
   resetPasswordActive.value = useAuthentification().isResetPasswordActive()
   displayUser.value = useAuthentification().getUser()?.email
   avatarUsername.value = useAuthentification().getUser()?.email.substring(0, 1)
-}, "ApplicationHeader")
+}
+
+onMounted(() => {
+  updateAuth()
+  useAuthentification().onAuthStateChangedCallback(updateAuth, "ApplicationHeader")
+});
+
+useNuxtApp().$setPageTranition(() => { 
+  mobileMenuActive.value = false
+  profileMenuActive.value = false
+ })
 
 const toggleMobileMenu = () => {
   mobileMenuActive.value = !mobileMenuActive.value

@@ -46,7 +46,7 @@ definePageMeta({ middleware: ['auth'] })
 const modalShow = ref(false)
 const modalMessage = ref("")
 const modalTitle = ref("")
-const email = useAuthentification().getUser()?.email
+const email = ref("")
 const deleteAction = ref(false)
 
 /*const nameFormData = reactive({
@@ -65,6 +65,10 @@ const deleteAccountData = reactive({
 /*const changeName = async (form) => {
 
 }*/
+
+onMounted(() => {
+    email.value = useAuthentification().getUser()?.email
+})
 
 const closeModal = () => {
     modalShow.value = false

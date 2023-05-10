@@ -15,16 +15,21 @@
 </template>
 
 <script setup>
-const savedStationsLocal = ref(await useStorage().getAllStations())
 const { stationId } = useRoute().params
-const stationName = ref(savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name)
-const stationRemoved = ref(savedStationsLocal.value.filter((station) => station.id == stationId).length == 0)
+const savedStationsLocal = ref([])
+const stationName = ref("")
+const stationRemoved = ref(false)
 
-useAuthentification().onAuthStateChangedCallback(async () => {
+onMounted(async () => {
     savedStationsLocal.value = await useStorage().getAllStations()
     stationName.value = savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name
     stationRemoved.value = savedStationsLocal.value.filter((station) => station.id == stationId).length == 0
-}, "StationId")
+    useAuthentification().onAuthStateChangedCallback(async () => {
+        savedStationsLocal.value = await useStorage().getAllStations()
+        stationName.value = savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name
+        stationRemoved.value = savedStationsLocal.value.filter((station) => station.id == stationId).length == 0
+    }, "StationId")
+})
 
 const removeFromFavorites = async () => {
     savedStationsLocal.value = await useStorage().removeStation(stationId)

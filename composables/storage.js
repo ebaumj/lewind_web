@@ -3,23 +3,29 @@ class Storage {
     savedStationsRemote = []
 
     constructor() {
-        this.getAllStations()
+        //this.getAllStations()
     }
 
     async getAllStations() {
-        const dataInStorage = JSON.parse(localStorage.getItem('windStations'))
-        if(dataInStorage && dataInStorage.length > 0)
-            this.savedStationsLocal = dataInStorage
-        else
+        if(process.server) {
             this.savedStationsLocal = []
+            this.savedStationsRemote = []
+        }
+        else {
+            const dataInStorage = JSON.parse(localStorage.getItem('windStations'))
+            if(dataInStorage && dataInStorage.length > 0)
+                this.savedStationsLocal = dataInStorage
+            else
+                this.savedStationsLocal = []
 
-        if(useAuthentification().isLoggedIn()) {
-            let { data: stations, error } = await useSupabaseClient().from('stations').select('station_id, station_name, index')
-            if(!error)
-                this.savedStationsRemote = stations.map((station) => { return { id: station.station_id, name: station.station_name, index: station.index } })
-            else {
-                this.savedStationsRemote = []
-                // Error Handling
+            if(useAuthentification().isLoggedIn()) {
+                let { data: stations, error } = await useSupabaseClient().from('stations').select('station_id, station_name, index')
+                if(!error)
+                    this.savedStationsRemote = stations.map((station) => { return { id: station.station_id, name: station.station_name, index: station.index } })
+                else {
+                    this.savedStationsRemote = []
+                    // Error Handling
+                }
             }
         }
 

@@ -17,31 +17,32 @@
 
 <script setup>
 import markerIcon from '~/assets/images/iconMapS.png'
-
-const savedStationsLocal = ref(await useStorage().getAllStations())
-const { data } = (await useFetch("/api/all_stations/"))
-if(data == null) {
-    throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
-}
-
 const allStations = ref([])
-data.value.forEach((station) => {
-    station.showMarker = true
-    if(savedStationsLocal.value.find(storedStation => storedStation.id === station.id))
-        station.showMarker = false
-    station.previewReady = false
-    station.showPreview = false
-    station.name = ""
-    allStations.value.push(station)
-})
-
+const savedStations = ref([])
 const center = {lat: 47.01, lng: 6.987}
-if(navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition((position) => { 
-    center.lat = position.coords.latitude
-    center.lng = position.coords.longitude
-  });
-}
+
+onMounted(async () => {
+    savedStations.value = await useStorage().getAllStations()
+    const { data } = (await useFetch("/api/all_stations/"))
+    if(data == null) {
+        throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
+    }
+    data.value.forEach((station) => {
+        station.showMarker = true
+        if(savedStations.value.find(storedStation => storedStation.id === station.id))
+            station.showMarker = false
+        station.previewReady = false
+        station.showPreview = false
+        station.name = ""
+        allStations.value.push(station)
+    })
+    if(navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition((position) => { 
+        center.lat = position.coords.latitude
+        center.lng = position.coords.longitude
+    });
+    }
+})
 
 const openedPreview = ref(null)
 const markerClick = async (id) => {
@@ -70,7 +71,7 @@ const hideMarker = (id) => {
 }
 
 const addStation = (id, name) => {
-    savedStationsLocal.value = useStorage().addStation(id, name)
+    savedStations.value = useStorage().addStation(id, name)
     closePreview(id)
     setTimeout(()=>hideMarker(id), 50)  // This way, the Info Window closes immediately
 }

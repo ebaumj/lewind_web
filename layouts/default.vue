@@ -13,6 +13,9 @@
 </template>
 
 <script setup>
+onBeforeMount(async () => {
+  useInitAuthentification()
+})
 </script>
 
 <style>

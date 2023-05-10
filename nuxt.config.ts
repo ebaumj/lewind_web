@@ -43,7 +43,7 @@ export default defineNuxtConfig({
     routeRules: {
         '/home': { redirect: '/' },
     },
-    ssr: false,
+    ssr: true,
     css: [ '~/assets/css/main.css' ],
     supabase: {
         url: process.env.SUPABASE_ACCESS_URL,

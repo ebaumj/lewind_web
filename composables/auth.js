@@ -1,3 +1,5 @@
+//import { serverSupabaseClient } from '#supabase/server'
+
 class Authentification {
     user = null
     resetPasswordActive = false
@@ -5,6 +7,7 @@ class Authentification {
     onAuthStateChange = []
 
     constructor() {
+        this.user = useSupabaseUser()
         useSupabaseClient().auth.onAuthStateChange((event, session) => {
             if(session?.user)
                 this.user = session.user
@@ -152,8 +155,14 @@ class Authentification {
     }
 }
 
-const auth = new Authentification()
+const auth = ref(null)
+
+export const useInitAuthentification = async () => {
+    if(auth.value == null && !process.server) {
+        auth.value = new Authentification()
+    }
+}
 
 export const useAuthentification = () => {
-    return auth
+    return auth.value
 }

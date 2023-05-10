@@ -14,21 +14,29 @@
                         </Transition>
                     </div>
                 </div>
-                <div v-if="savedStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations.</div>
-                <div v-if="savedStations.length === 0 && !useAuthentification().isLoggedIn()" class="flex justify-center text-center w-full text-lg">Log in to synchronize your Wind Stations.</div>
+                <div v-if="!isMounted" class="flex justify-center text-center w-full text-lg">mounting...</div>
+                <div v-else>
+                    <div v-if="savedStations.length === 0" class="flex justify-center text-center w-full text-lg">You're not observing any Spots yet. Go to Map to pick your Wind Stations.</div>
+                    <div v-if="savedStations.length === 0 && !useAuthentification().isLoggedIn()" class="flex justify-center text-center w-full text-lg">Log in to synchronize your Wind Stations.</div>
+                </div>
             </div>
         </div>
     </div>
 </template>
 
 <script setup>
-const savedStations = ref(await useStorage().getAllStations())
-savedStations.value.sort((a, b) => { return a.index - b.index })
+const isMounted = ref(false)
+const savedStations = ref([])
 
-useAuthentification().onAuthStateChangedCallback(async () => {
+onMounted(async () => {
+    isMounted.value = true
     savedStations.value = await useStorage().getAllStations()
     savedStations.value.sort((a, b) => { return a.index - b.index })
-}, "Index")
+    useAuthentification().onAuthStateChangedCallback(async () => {
+        savedStations.value = await useStorage().getAllStations()
+        savedStations.value.sort((a, b) => { return a.index - b.index })
+    }, "Index")
+});
 </script>
 
 <style scoped>
