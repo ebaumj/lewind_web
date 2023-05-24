@@ -22,6 +22,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Home'
+})
+
 const savedStations = ref(await useStorage().getAllStations())
 savedStations.value.sort((a, b) => { return a.index - b.index })
 

@@ -27,6 +27,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'About'
+})
+
 const formData = reactive({
   email: "",
   subject: "",

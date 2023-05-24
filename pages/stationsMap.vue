@@ -12,7 +12,11 @@
 </template>
 
 <script setup>
-
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Stations Map'
+})
 </script>
 
 <style scoped>

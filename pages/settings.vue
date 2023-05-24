@@ -29,6 +29,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Settings'
+})
+
 const modalShow = ref(false)
 const modalMessage = ref("")
 const modalTitle = ref("")

@@ -42,6 +42,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Profile'
+})
+
 definePageMeta({ middleware: ['auth'] })
 const modalShow = ref(false)
 const modalMessage = ref("")

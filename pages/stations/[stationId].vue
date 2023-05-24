@@ -15,6 +15,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Station Details'
+})
+
 const savedStationsLocal = ref(await useStorage().getAllStations())
 const { stationId } = useRoute().params
 const stationName = ref(savedStationsLocal.value.filter((station) => station.id == stationId)[0]?.name)

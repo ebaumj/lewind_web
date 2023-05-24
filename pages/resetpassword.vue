@@ -19,6 +19,12 @@
 </template>
 
 <script setup>
+const gtag = useGtag()
+gtag('event', 'screen_view', {
+  app_name: 'Le Wind',
+  screen_name: 'Password Reset'
+})
+
 definePageMeta({ middleware: ['resetpassword'] })
 const modalShow = ref(false)
 const modalMessage = ref("")
