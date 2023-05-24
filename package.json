@@ -25,6 +25,7 @@
     "@nuxtjs/tailwindcss": "^6.4.1",
     "nodemailer": "^6.9.1",
     "nuxt": "^3.2.3",
+    "nuxt-gtag": "^0.5.7",
     "sass": "^1.58.3",
     "validator": "^13.9.0",
     "vuedraggable": "^4.1.0"
