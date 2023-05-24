@@ -3,7 +3,8 @@ export default defineNuxtConfig({
     build: { transpile: ['@fawmi/vue-google-maps'] },
     modules: [ 
         '@nuxtjs/tailwindcss', 
-        '@nuxtjs/supabase'
+        '@nuxtjs/supabase',
+        'nuxt-gtag'
     ],
     app: {
         head: {
@@ -48,6 +49,13 @@ export default defineNuxtConfig({
     supabase: {
         url: process.env.SUPABASE_ACCESS_URL,
         key: process.env.SUPABASE_ACCESS_KEY
+    },
+    gtag: {
+        id: process.env.GOOGLE_ANALYTICS_ID,
+        initialConsent: true,
+        config: {
+            page_title: 'Le Wind'
+        }
     }
     /*vite: {
         optimizeDeps: {
