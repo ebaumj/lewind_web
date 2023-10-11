@@ -20,7 +20,9 @@
           </div>
           <button type="submit" class="text-lg flex hover:bg-rose_dark_red bg-rose_dark text-white py-2 md:px-4 px-2 border rounded shadow text-lg items-center justify-center"><i class="material-icons mr-2 mb-0 pb-0">mail</i>Send Message</button>
         </form>
+        <!--
         <div class="flex justify-center mt-12 text-lg"><a href='https://play.google.com/store/apps/details?id=com.baumannsw.lewind&pcampaignid=pcampaignidMKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img class="h-16" alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png'/></a></div>
+        -->
       </div>
       <BaseModal :show="modalShow" @close-modal="modalShow = false" :title="modalTitle" :message="modalMessage" />
     </div>
