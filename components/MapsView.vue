@@ -19,20 +19,43 @@
 import markerIcon from '~/assets/images/iconMapS.png'
 
 const savedStationsLocal = ref(await useStorage().getAllStations())
-const { data } = (await useFetch("/api/all_stations/"))
-if(data == null) {
+
+const config = useRuntimeConfig().public
+
+const limit = 50000
+
+const { data } = await useFetch('https://search.letskite.ch/indexes/stations/search', {
+    method: 'get', 
+    //mode: 'cors', 
+    cache: 'no-cache', 
+    query: { limit: limit, attributesToRetrieve: 'id,name,wind,direction,windcolor,_geo' },
+    headers: {
+        'Authorization': `Bearer ${config.LETSKITE_API_TOKEN}`,
+        'Accept': "application/json"
+    }
+})
+
+//const { data } = (await useFetch("/api/all_stations/"))
+if(data.value == null) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
 }
 
 const allStations = ref([])
-data.value.forEach((station) => {
-    station.showMarker = true
+data.value.hits.forEach((station) => {
+    let showMarker = true
     if(savedStationsLocal.value.find(storedStation => storedStation.id === station.id))
-        station.showMarker = false
-    station.previewReady = false
-    station.showPreview = false
-    //station.name = ""
-    allStations.value.push(station)
+        showMarker = false
+    allStations.value.push({ 
+        id: station.id, 
+        name: station.name,
+        latitude: station._geo.lat, 
+        longitude: station._geo.lng, 
+        wind_direction: station.direction, 
+        wind_speed: station.wind,
+        showMarker: showMarker,
+        previewReady: false,
+        showPreview: false
+    })
 })
 
 const center = {lat: 47.01, lng: 6.987}

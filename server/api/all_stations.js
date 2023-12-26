@@ -2,7 +2,7 @@ export default defineEventHandler(async (event) => {
 
     //const { stations } = await $fetch('https://letskite.ch/datas/map/stations/')
 
-    const config = useRuntimeConfig().secrets
+    const config = useRuntimeConfig().public
 
     const limit = 50000
 

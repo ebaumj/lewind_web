@@ -33,6 +33,7 @@ export default defineNuxtConfig({
         },
         public: {
             GOOGLE_MAPS_API_KEY: process.env.MAPS_API_KEY,
+            LETSKITE_API_TOKEN: process.env.LETSKITE_API_CODE
         }
     },
     tailwindcss: {
