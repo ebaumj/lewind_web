@@ -31,7 +31,7 @@ data.value.forEach((station) => {
         station.showMarker = false
     station.previewReady = false
     station.showPreview = false
-    station.name = ""
+    //station.name = ""
     allStations.value.push(station)
 })
 
@@ -50,10 +50,10 @@ const markerClick = async (id) => {
         const station = allStations.value.find(station => station.id === id)
         station.showPreview = true
         station.previewReady = false
-        const { data } = (await useFetch("/api/station_details/" + id))
+        /*const { data } = (await useFetch("/api/station_details/" + id))
         station.name = data.value.name
         station.vent_vitesse = data.value.vent_vitesse
-        station.vent_direction = data.value.vent_direction
+        station.vent_direction = data.value.vent_direction*/
         station.previewReady = true
         openedPreview.value = id
     }

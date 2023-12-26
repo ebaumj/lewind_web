@@ -28,7 +28,8 @@ export default defineNuxtConfig({
             MAIL_USER: process.env.MAIL_USER,
             MAIL_PASSWORD: process.env.MAIL_PASSWORD,
             MAIL_CONTACT: process.env.MAIL_CONTACT,
-            MAIL_SERVICE: process.env.MAIL_SERVICE
+            MAIL_SERVICE: process.env.MAIL_SERVICE,
+            LETSKITE_API_TOKEN: process.env.LETSKITE_API_CODE
         },
         public: {
             GOOGLE_MAPS_API_KEY: process.env.MAPS_API_KEY,
