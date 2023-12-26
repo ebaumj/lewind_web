@@ -19,43 +19,19 @@
 import markerIcon from '~/assets/images/iconMapS.png'
 
 const savedStationsLocal = ref(await useStorage().getAllStations())
-
-const config = useRuntimeConfig().public
-
-const limit = 50000
-
-const { data } = await useFetch('https://search.letskite.ch/indexes/stations/search', {
-    method: 'get', 
-    //mode: 'cors', 
-    cache: 'no-cache', 
-    query: { limit: limit, attributesToRetrieve: 'id,name,wind,direction,windcolor,_geo' },
-    headers: {
-        'Authorization': `Bearer ${config.LETSKITE_API_TOKEN}`,
-        'Accept': "application/json"
-    }
-})
-
-//const { data } = (await useFetch("/api/all_stations/"))
-if(data.value == null) {
+const { data } = (await useFetch("/api/all_stations/"))
+if(!data.value) {
     throw createError({ statusCode: 404, statusMessage: "Failed to load Map!", fatal: true })
 }
 
 const allStations = ref([])
-data.value.hits.forEach((station) => {
-    let showMarker = true
+data.value.forEach((station) => {
+    station.showMarker = true
     if(savedStationsLocal.value.find(storedStation => storedStation.id === station.id))
-        showMarker = false
-    allStations.value.push({ 
-        id: station.id, 
-        name: station.name,
-        latitude: station._geo.lat, 
-        longitude: station._geo.lng, 
-        wind_direction: station.direction, 
-        wind_speed: station.wind,
-        showMarker: showMarker,
-        previewReady: false,
-        showPreview: false
-    })
+        station.showMarker = false
+    station.previewReady = false
+    station.showPreview = false
+    allStations.value.push(station)
 })
 
 const center = {lat: 47.01, lng: 6.987}
@@ -74,7 +50,6 @@ const markerClick = async (id) => {
         station.showPreview = true
         station.previewReady = false
         /*const { data } = (await useFetch("/api/station_details/" + id))
-        station.name = data.value.name
         station.vent_vitesse = data.value.vent_vitesse
         station.vent_direction = data.value.vent_direction*/
         station.previewReady = true
